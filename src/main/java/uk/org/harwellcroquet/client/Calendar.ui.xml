@@ -1,0 +1,27 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		
+	</ui:style>
+
+	<g:HTMLPanel>
+		<h2>Fixtures</h2>
+		<g:VerticalPanel>
+
+			<g:HorizontalPanel>
+
+				<g:Button ui:field="backButton">&lt;&lt;</g:Button>
+				<g:Cell verticalAlignment="ALIGN_MIDDLE" horizontalAlignment="ALIGN_CENTER"
+					width="100">
+					<g:Label ui:field="label"></g:Label>
+				</g:Cell>
+				<g:Button ui:field="fwdButton">&gt;&gt;</g:Button>
+
+			</g:HorizontalPanel>
+
+			<g:FlexTable ui:field="table"></g:FlexTable>
+
+		</g:VerticalPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

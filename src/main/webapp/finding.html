@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" href="croquet.css" />
+<style type="text/css">
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	margin: 10;
+	padding: 10;
+}
+
+#map-canvas {
+	height: 70%
+}
+
+p {
+	width: 80%
+}
+</style>
+
+<script type="text/javascript"
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzKJigMCPY3KHJUBrKQL8254mojkaw_Co&sensor=false">
+	
+</script>
+
+<script type="text/javascript">
+	function initialize() {
+		var mapOptions = {
+			center : new google.maps.LatLng(51.581387, -1.306697),
+			zoom : 16,
+			mapTypeId : google.maps.MapTypeId.HYBRID
+		};
+		var map = new google.maps.Map(document.getElementById("map-canvas"),
+				mapOptions);
+
+		var mainCarPark = new google.maps.Marker({
+			position : new google.maps.LatLng(51.580485, -1.304927),
+			map : map,
+			title : "Main Car Park"
+		});
+
+		var otherCarPark = new google.maps.Marker({
+			position : new google.maps.LatLng(51.58242, -1.307204),
+			map : map,
+			title : "Other Car Park"
+		});
+
+		var lawns = new google.maps.Marker({
+			position : new google.maps.LatLng(51.581167, -1.306016),
+			map : map,
+			title : "Lawns"
+		});
+
+		var mainCarParkInfo = new google.maps.InfoWindow({
+			content : 'Main car park<br/>It is usually possible to park here',
+		});
+
+		google.maps.event.addListener(mainCarPark, 'click', function() {
+			mainCarParkInfo.open(map, mainCarPark);
+		});
+
+		var otherCarParkInfo = new google.maps.InfoWindow(
+				{
+					content : 'Other car park<br/>Access via Curie Avenue and Second Street'
+				});
+
+		google.maps.event.addListener(otherCarPark, 'click', function() {
+			otherCarParkInfo.open(map, otherCarPark);
+		});
+
+		var lawnsInfo = new google.maps.InfoWindow({
+			content : 'Lawns<br/>These are adjacent to the pavilion'
+		});
+
+		google.maps.event.addListener(lawns, 'click', function() {
+			lawnsInfo.open(map, lawns);
+		});
+
+	}
+	google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+</head>
+<body>
+	<h1>Harwell Croquet Club</h1>
+	<div id="map-canvas"></div>
+
+	<h2>Location</h2>
+	<p>You can zoom and scroll the map to see the area and use the
+		other controls.</p>
+	<p>The police lodge which is still shown on the map (2 Aug 2013)
+		has now been removed.</p>
+	<p>Click on the red pins for more information.</p>
+
+</body>
+</html>

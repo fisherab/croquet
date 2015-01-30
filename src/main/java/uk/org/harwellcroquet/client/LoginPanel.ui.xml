@@ -1,0 +1,59 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		.label {
+			width: 7em;
+		}
+		
+		.narrow {
+			max-width: 40em;
+		}
+	</ui:style>
+
+
+	<g:VerticalPanel>
+
+		<g:HTML>
+			<h2>Login</h2>
+			<p>Enter user name and password below if you are already registered</p>
+		</g:HTML>
+		<g:HorizontalPanel>
+			<g:Label addStyleNames='{style.label}'>Email</g:Label>
+			<g:TextBox ui:field="email"></g:TextBox>
+		</g:HorizontalPanel>
+		<g:HorizontalPanel>
+			<g:Label addStyleNames='{style.label}'>Password</g:Label>
+			<g:PasswordTextBox ui:field="password"></g:PasswordTextBox>
+		</g:HorizontalPanel>
+		<g:Button ui:field="loginButton">Submit</g:Button>
+		<g:HTML>
+			<h2>Registration</h2>
+			<p>
+				You must register before you can
+				log in. To do
+				so please
+				<a href="#register">follow this link</a>
+				.
+			</p>
+
+		</g:HTML>
+
+		<g:HTML addStyleNames='{style.narrow}'>
+			<h2>Recover password</h2>
+			<p>If you are already registered but have forgotten your password
+				enter the email address you used when registering and click
+				&quot;Submit&quot; below. </p>
+		</g:HTML>
+		<g:HorizontalPanel>
+			<g:Label addStyleNames='{style.label}'>Email</g:Label>
+			<g:TextBox ui:field="forgotEmail"></g:TextBox>
+		</g:HorizontalPanel>
+		<g:Button ui:field="forgotButton">Submit</g:Button>
+
+
+	</g:VerticalPanel>
+
+</ui:UiBinder> 
+
+

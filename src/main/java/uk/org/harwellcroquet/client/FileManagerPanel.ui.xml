@@ -1,0 +1,50 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		
+	</ui:style>
+
+
+	<g:VerticalPanel ui:field="top">
+		<g:HTML>
+			<h2>Add a file</h2>
+		</g:HTML>
+		<g:HTML>
+			<p>Choose the file you wish to upload then give it a name you want it
+				to be known as. This name can contain a directory. Levels of
+				directory must be separated with '/'.</p>
+			<p>Anything stored in the minutes directory will be displayed on the
+				meetings page.</p>
+		</g:HTML>
+
+		<g:FormPanel ui:field="form">
+			<g:VerticalPanel>
+				<g:FileUpload ui:field="fileupload" name="fileupload"></g:FileUpload>
+				<g:HTML>
+					<br />
+				</g:HTML>
+				<g:HorizontalPanel>
+					<g:Label>File name</g:Label>
+					<g:HTML>&nbsp;&nbsp;</g:HTML>
+					<g:TextBox ui:field="filename" name="filename" width="400px"></g:TextBox>
+				</g:HorizontalPanel>
+				<g:HTML>
+					<br />
+				</g:HTML>
+				<g:Button ui:field="submit">Submit</g:Button>
+				<g:Hidden name="sessionid" ui:field="sessionid" />
+
+			</g:VerticalPanel>
+		</g:FormPanel>
+
+		<g:HTML>
+			<br />
+			<h2>Modify or delete files</h2>
+		</g:HTML>
+		<g:VerticalPanel ui:field="main"></g:VerticalPanel>
+		<g:HTML ui:field="results" />
+
+	</g:VerticalPanel>
+
+</ui:UiBinder> 

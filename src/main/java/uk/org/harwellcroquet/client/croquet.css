@@ -1,0 +1,51 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: rgb(255, 255, 255);
+}
+
+h1 {
+	color: rgb(74, 123, 70);
+	margin: 0.5em 1em 0.5em 0em;
+}
+
+h2 {
+	font-family: Arial, Helvetica, sans-serif;
+	color: rgb(74, 123, 70);
+	margin: 1em 0em .2em 0em;
+}
+
+.navPanel td {
+	padding: .3em .45em;
+}
+
+.navPanel table {
+	background-color: rgb(230, 240, 221);
+	width: 10em;
+}
+
+@external gwt-*;
+.gwt-Button {
+	color: rgb(74, 123, 70);
+	padding: 1px;
+}
+
+.red {
+	color: red;
+}
+
+a:link {
+	text-decoration: none;
+	color: rgb(74, 123, 70);
+}
+
+a:visited {
+	text-decoration: none;
+	color: rgb(74, 123, 70);
+}
+
+a:hover {
+	margin: -2px;
+	padding: 0px 8px 0px 2px;
+	background-color: rgb(238, 238, 238);
+	color: rgb(74, 123, 70);
+}
