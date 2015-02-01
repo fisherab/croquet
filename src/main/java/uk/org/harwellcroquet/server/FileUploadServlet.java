@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 
 import javax.ejb.EJB;
 import javax.persistence.EntityManager;
@@ -43,7 +44,7 @@ public class FileUploadServlet extends HttpServlet {
 
 		String filename = null;
 		String sessionid = null;
-		File dir = new File(new File(".."), "files");
+		File dir = Paths.get("..", "data", "croquet", "files").toFile();
 		File temp = File.createTempFile("harwellcroquet.", null, dir);
 		try {
 			FileItemIterator iterator = upload.getItemIterator(req);

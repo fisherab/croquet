@@ -1,6 +1,8 @@
 package uk.org.harwellcroquet.server.bean;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -72,7 +74,7 @@ public class StoredFileBean {
 	}
 
 	public File getFile(String name) {
-		File dir = new File(new File(".."), "files");
+		File dir = Paths.get("..", "data", "croquet", "files").toFile();
 		StoredFile fileName = entityManager.createNamedQuery(StoredFile.LIKE, StoredFile.class)
 				.setParameter("name", name).getSingleResult();
 		return new File(dir, Long.toString(fileName.getId()));

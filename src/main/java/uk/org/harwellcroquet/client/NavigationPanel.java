@@ -48,11 +48,11 @@ public class NavigationPanel extends Composite {
 		allwaysPanel.add(new Anchor("Finding us", GWT.getHostPageBaseURL() + "finding.html"));
 		allwaysPanel.add(new InlineHyperlink("Contact us", "contact"));
 		allwaysPanel.add(new InlineHyperlink("Events", "events/" + yearFormat.format(new Date())));
-		allwaysPanel.add(new InlineHyperlink("Meetings", "meetings"));
-
+		
 		this.html = new HTML();
 		panel.add(this.html);
-
+		
+		loggedInPanel.add(new InlineHyperlink("Meetings", "meetings"));
 		loggedInPanel.add(new InlineHyperlink("List users", "listUsers"));
 		loggedInPanel.add(new InlineHyperlink("Account settings", "accountSettings"));
 		loggedInPanel.add(new InlineHyperlink("Create news item", "createNewsItem"));
