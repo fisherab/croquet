@@ -30,7 +30,7 @@ public class EventTO implements IsSerializable {
 	private String name;
 	private String type;
 	private String format;
-	private Boolean complete;
+	private UserTO winner;
 	private List<EntrantTO> entrants = new ArrayList<EntrantTO>();
 	private List<ResultTO> results = new ArrayList<ResultTO>();
 
@@ -38,13 +38,14 @@ public class EventTO implements IsSerializable {
 	public EventTO() {
 	}
 
-	public EventTO(Long id, Integer year, String name, String type, String format, Boolean complete) {
+	public EventTO(Long id, Integer year, String name, String type,
+			String format, UserTO winner) {
 		this.id = id;
 		this.year = year;
 		this.name = name;
 		this.type = type;
 		this.format = format;
-		this.complete = complete;
+		this.winner = winner;
 	}
 
 	public Long getId() {
@@ -55,8 +56,8 @@ public class EventTO implements IsSerializable {
 		this.id = id;
 	}
 
-	public Boolean getComplete() {
-		return this.complete;
+	public UserTO getWinner() {
+		return this.winner;
 	}
 
 	public void setYear(Integer year) {
@@ -95,12 +96,8 @@ public class EventTO implements IsSerializable {
 		return results;
 	}
 
-	public Boolean isComplete() {
-		return complete;
-	}
-
-	public void setComplete(Boolean complete) {
-		this.complete = complete;
+	public void setWinner(UserTO winner) {
+		this.winner = winner;
 	}
 
 }
