@@ -13,15 +13,18 @@ import uk.org.harwellcroquet.shared.EntrantTO;
 import uk.org.harwellcroquet.shared.EventTO;
 import uk.org.harwellcroquet.shared.FixtureNameTO;
 import uk.org.harwellcroquet.shared.FixtureTO;
+import uk.org.harwellcroquet.shared.Win;
 
 @SuppressWarnings("serial")
-public class EventServiceImpl extends ContextRemoteServiceServlet implements EventService {
+public class EventServiceImpl extends ContextRemoteServiceServlet implements
+		EventService {
 
 	@EJB
 	private EventBean eventBean;
 
 	@Override
-	public void add(String sessionid, EventTO eto) throws AuthException, BadInputException {
+	public void add(String sessionid, EventTO eto) throws AuthException,
+			BadInputException {
 		eventBean.add(sessionid, eto);
 	}
 
@@ -36,7 +39,8 @@ public class EventServiceImpl extends ContextRemoteServiceServlet implements Eve
 	}
 
 	@Override
-	public void delete(String sessionid, List<Long> todelete) throws AuthException {
+	public void delete(String sessionid, List<Long> todelete)
+			throws AuthException {
 		eventBean.delete(sessionid, todelete);
 	}
 
@@ -72,7 +76,8 @@ public class EventServiceImpl extends ContextRemoteServiceServlet implements Eve
 	}
 
 	@Override
-	public List<FixtureTO> getFixturesForYear(int year) throws BadInputException {
+	public List<FixtureTO> getFixturesForYear(int year)
+			throws BadInputException {
 		return eventBean.getFixturesForYear(year);
 	}
 
@@ -83,18 +88,25 @@ public class EventServiceImpl extends ContextRemoteServiceServlet implements Eve
 	}
 
 	@Override
-	public List<String> getFixtureNamesForYear(int year) throws BadInputException {
+	public List<String> getFixtureNamesForYear(int year)
+			throws BadInputException {
 		return eventBean.getFixtureNamesForYear(year);
 	}
 
 	@Override
-	public List<FixtureTO> getFixtures(String sessionid, int year, String name) throws BadInputException, AuthException {
+	public List<FixtureTO> getFixtures(String sessionid, int year, String name)
+			throws BadInputException, AuthException {
 		return eventBean.getFixtures(sessionid, year, name);
 	}
 
 	@Override
 	public void deleteEntrant(List<EntrantTO> entrants) {
 		eventBean.deleteEntrant(entrants);
+	}
+
+	@Override
+	public List<Win> getRollOfHonour() {
+		return eventBean.getRollOfHonour();
 	}
 
 }

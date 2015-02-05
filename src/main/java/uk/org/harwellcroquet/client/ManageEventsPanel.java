@@ -404,7 +404,7 @@ public class ManageEventsPanel extends Composite {
 				EventTO eto = new EventTO(null, Integer.parseInt(yearBox.getValue().trim()), eventBox.getValue(eventBox
 						.getSelectedIndex()), typeBox.getValue(typeBox.getSelectedIndex()).replace(" ", "")
 						.toUpperCase(),
-						formatBox.getValue(formatBox.getSelectedIndex()).replace(" ", "").toUpperCase(), false);
+						formatBox.getValue(formatBox.getSelectedIndex()).replace(" ", "").toUpperCase(), null);
 				boolean good = true;
 				for (int i = 1; i < n; i++) {
 					if (good) {

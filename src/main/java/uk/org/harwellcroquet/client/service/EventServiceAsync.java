@@ -7,6 +7,7 @@ import uk.org.harwellcroquet.shared.EntrantTO;
 import uk.org.harwellcroquet.shared.EventTO;
 import uk.org.harwellcroquet.shared.FixtureNameTO;
 import uk.org.harwellcroquet.shared.FixtureTO;
+import uk.org.harwellcroquet.shared.Win;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -57,5 +58,7 @@ public interface EventServiceAsync {
 	void update(EventTO eto, AsyncCallback<Void> callback);
 
 	void updateFixtureNames(List<FixtureNameTO> fntos, AsyncCallback<Void> callback);
+
+	void getRollOfHonour(AsyncCallback<List<Win>> callback);
 
 }

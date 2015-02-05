@@ -26,9 +26,12 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class NavigationPanel extends Composite {
 
 	private HTML html;
-	private final ItemServiceAsync itemService = ItemServiceAsync.Util.getInstance();
-	private final LoginServiceAsync loginService = LoginServiceAsync.Util.getInstance();
-	private final static DateTimeFormat yearFormat = DateTimeFormat.getFormat("yyyy");
+	private final ItemServiceAsync itemService = ItemServiceAsync.Util
+			.getInstance();
+	private final LoginServiceAsync loginService = LoginServiceAsync.Util
+			.getInstance();
+	private final static DateTimeFormat yearFormat = DateTimeFormat
+			.getFormat("yyyy");
 	private Harwellcroquet harwellcroquet;
 	private VerticalPanel adminPanel = new VerticalPanel();
 	private VerticalPanel loggedInPanel = new VerticalPanel();
@@ -45,32 +48,47 @@ public class NavigationPanel extends Composite {
 		panel.add(allwaysPanel);
 
 		allwaysPanel.add(new InlineHyperlink("Home", "home"));
-		allwaysPanel.add(new Anchor("Finding us", GWT.getHostPageBaseURL() + "finding.html"));
+		allwaysPanel.add(new Anchor("Finding us", GWT.getHostPageBaseURL()
+				+ "finding.html"));
 		allwaysPanel.add(new InlineHyperlink("Contact us", "contact"));
-		allwaysPanel.add(new InlineHyperlink("Events", "events/" + yearFormat.format(new Date())));
-		
+		allwaysPanel.add(new InlineHyperlink("Events", "events/"
+				+ yearFormat.format(new Date())));
+		allwaysPanel.add(new InlineHyperlink("Roll of Honour", "roll"));
+
 		this.html = new HTML();
 		panel.add(this.html);
-		
+
 		loggedInPanel.add(new InlineHyperlink("Meetings", "meetings"));
 		loggedInPanel.add(new InlineHyperlink("List users", "listUsers"));
-		loggedInPanel.add(new InlineHyperlink("Account settings", "accountSettings"));
-		loggedInPanel.add(new InlineHyperlink("Create news item", "createNewsItem"));
-		loggedInPanel.add(new InlineHyperlink("Modify news items", "modifyNewsItems"));
+		loggedInPanel.add(new InlineHyperlink("Account settings",
+				"accountSettings"));
+		loggedInPanel.add(new InlineHyperlink("Create news item",
+				"createNewsItem"));
+		loggedInPanel.add(new InlineHyperlink("Modify news items",
+				"modifyNewsItems"));
 		loggedInPanel.add(new InlineHyperlink("Record result", "recordResult"));
 
-		adminPanel.add(new InlineHyperlink("Create body item", "createBodyItem"));
-		adminPanel.add(new InlineHyperlink("Modify body items", "modifyBodyItems"));
-		adminPanel.add(new InlineHyperlink("Create nav items", "createNavItems"));
-		adminPanel.add(new InlineHyperlink("Modify nav items", "modifyNavItems"));
-		adminPanel.add(new InlineHyperlink("Create contact items", "createContactItems"));
-		adminPanel.add(new InlineHyperlink("Modify contact items", "modifyContactItems"));
-		adminPanel.add(new InlineHyperlink("Modify accounts", "modifyAccounts"));
+		adminPanel
+				.add(new InlineHyperlink("Create body item", "createBodyItem"));
+		adminPanel.add(new InlineHyperlink("Modify body items",
+				"modifyBodyItems"));
+		adminPanel
+				.add(new InlineHyperlink("Create nav items", "createNavItems"));
+		adminPanel
+				.add(new InlineHyperlink("Modify nav items", "modifyNavItems"));
+		adminPanel.add(new InlineHyperlink("Create contact items",
+				"createContactItems"));
+		adminPanel.add(new InlineHyperlink("Modify contact items",
+				"modifyContactItems"));
+		adminPanel
+				.add(new InlineHyperlink("Modify accounts", "modifyAccounts"));
 		adminPanel.add(new InlineHyperlink("File manager", "files"));
 
 		scorerPanel.add(new InlineHyperlink("Manage Events", "manageEvents"));
-		scorerPanel.add(new InlineHyperlink("Manage Fixture Names", "manageFixtureNames"));
-		scorerPanel.add(new InlineHyperlink("Record Fixtures", "recordFixtures"));
+		scorerPanel.add(new InlineHyperlink("Manage Fixture Names",
+				"manageFixtureNames"));
+		scorerPanel
+				.add(new InlineHyperlink("Record Fixtures", "recordFixtures"));
 
 		treasurerPanel.add(new InlineHyperlink("Subscriptions", "manageSubs"));
 
@@ -145,37 +163,40 @@ public class NavigationPanel extends Composite {
 
 		adminPanel.add(debug);
 
-		TheEventBus.getInstance().addHandler(LoginEvent.TYPE, new LoginEventHandler() {
+		TheEventBus.getInstance().addHandler(LoginEvent.TYPE,
+				new LoginEventHandler() {
 
-			@Override
-			public void onLogin(LoginEvent event) {
-				panel.remove(loggedInPanel);
-				panel.remove(adminPanel);
-				panel.remove(scorerPanel);
-				panel.remove(treasurerPanel);
-				if (event.getUserTO() != null) {
-					UserTO user = event.getUserTO();
-					panel.add(loggedInPanel);
-					if (user.getPriv().equals("SUPER") || user.isScorer()) {
-						panel.add(scorerPanel);
-					}
-					if (user.getPriv().equals("SUPER") || user.isTreasurer()) {
-						panel.add(treasurerPanel);
-					}
-					if (user.getPriv().equals("SUPER")) {
-						panel.add(adminPanel);
-						adminPanel.remove(online);
-						adminPanel.remove(offline);
-						if (user.isOnline()) {
-							adminPanel.add(offline);
-						} else {
-							adminPanel.add(online);
+					@Override
+					public void onLogin(LoginEvent event) {
+						panel.remove(loggedInPanel);
+						panel.remove(adminPanel);
+						panel.remove(scorerPanel);
+						panel.remove(treasurerPanel);
+						if (event.getUserTO() != null) {
+							UserTO user = event.getUserTO();
+							panel.add(loggedInPanel);
+							if (user.getPriv().equals("SUPER")
+									|| user.isScorer()) {
+								panel.add(scorerPanel);
+							}
+							if (user.getPriv().equals("SUPER")
+									|| user.isTreasurer()) {
+								panel.add(treasurerPanel);
+							}
+							if (user.getPriv().equals("SUPER")) {
+								panel.add(adminPanel);
+								adminPanel.remove(online);
+								adminPanel.remove(offline);
+								if (user.isOnline()) {
+									adminPanel.add(offline);
+								} else {
+									adminPanel.add(online);
+								}
+							}
+
 						}
 					}
-
-				}
-			}
-		});
+				});
 
 		this.init();
 		this.initWidget(panel);

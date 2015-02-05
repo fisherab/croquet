@@ -98,7 +98,7 @@ public class DisplayEventPanel extends Composite {
 			}
 		} else if (eto.getFormat().equals("ALLPLAYALL")) {
 			displayAPA(eto, null);
-		} else {
+		} else { // TWOBLOCKS
 			displayAPA(eto, 1);
 			displayAPA(eto, 2);
 		}

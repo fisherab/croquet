@@ -12,6 +12,7 @@ import uk.org.harwellcroquet.shared.Consts;
 import uk.org.harwellcroquet.shared.UserTO;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -20,7 +21,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.logging.client.HasWidgetsLogHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -39,8 +39,10 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class Harwellcroquet implements EntryPoint {
 
-	private static LoginServiceAsync loginService = LoginServiceAsync.Util.getInstance();
-	final private static Logger logger = Logger.getLogger(Harwellcroquet.class.getName());
+	private static LoginServiceAsync loginService = LoginServiceAsync.Util
+			.getInstance();
+	final private static Logger logger = Logger.getLogger(Harwellcroquet.class
+			.getName());
 
 	private Widget body;
 	private FlexTable headerGrid;
@@ -82,6 +84,13 @@ public class Harwellcroquet implements EntryPoint {
 		this.main.add(this.body);
 	}
 
+	private void displayRoll() {
+		RollPanel rollPanel = new RollPanel();
+		this.main.remove(this.body);
+		this.body = new ScrollPanel(rollPanel);
+		this.main.add(this.body);
+	}
+
 	private void displayEvent(int year, String name) {
 		DisplayEventPanel displayEventPanel = new DisplayEventPanel(year, name);
 		this.main.remove(this.body);
@@ -90,7 +99,8 @@ public class Harwellcroquet implements EntryPoint {
 	}
 
 	private void displayFixture(int year, String name) {
-		DisplayFixturePanel displayFixturePanel = new DisplayFixturePanel(year, name);
+		DisplayFixturePanel displayFixturePanel = new DisplayFixturePanel(year,
+				name);
 		this.main.remove(this.body);
 		this.body = new ScrollPanel(displayFixturePanel);
 		this.main.add(this.body);
@@ -176,7 +186,8 @@ public class Harwellcroquet implements EntryPoint {
 	}
 
 	private void resetPassword(long userId, String hashedPassword) {
-		ResetPasswordPanel resetPasswordPanel = new ResetPasswordPanel(userId, hashedPassword);
+		ResetPasswordPanel resetPasswordPanel = new ResetPasswordPanel(userId,
+				hashedPassword);
 		this.main.remove(this.body);
 		this.body = new ScrollPanel(resetPasswordPanel);
 		this.main.add(this.body);
@@ -199,28 +210,30 @@ public class Harwellcroquet implements EntryPoint {
 			History.newItem("home");
 		}
 
-		TheEventBus.getInstance().addHandler(HomeChangedEvent.TYPE, new HomeChangedEventHandler() {
-			@Override
-			public void onChange(HomeChangedEvent event) {
-				home.refresh();
-			}
-		});
+		TheEventBus.getInstance().addHandler(HomeChangedEvent.TYPE,
+				new HomeChangedEventHandler() {
+					@Override
+					public void onChange(HomeChangedEvent event) {
+						home.refresh();
+					}
+				});
 
 		/* Find current user if present and setup */
 		String sessionid = Cookies.getCookie(Consts.COOKIE);
 		if (sessionid != null) {
-			Harwellcroquet.loginService.getUser(sessionid, new AsyncCallback<UserTO>() {
+			Harwellcroquet.loginService.getUser(sessionid,
+					new AsyncCallback<UserTO>() {
 
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert("Failure " + caught);
-				}
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Failure " + caught);
+						}
 
-				@Override
-				public void onSuccess(UserTO uto) {
-					Harwellcroquet.this.setup(uto);
-				}
-			});
+						@Override
+						public void onSuccess(UserTO uto) {
+							Harwellcroquet.this.setup(uto);
+						}
+					});
 		} else {
 			Harwellcroquet.this.setup(null);
 		}
@@ -231,7 +244,8 @@ public class Harwellcroquet implements EntryPoint {
 		logout.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Harwellcroquet.loginService.logout(Cookies.getCookie(Consts.COOKIE),
+				Harwellcroquet.loginService.logout(
+						Cookies.getCookie(Consts.COOKIE),
 						new AsyncCallback<Void>() {
 
 							@Override
@@ -241,30 +255,35 @@ public class Harwellcroquet implements EntryPoint {
 
 							@Override
 							public void onSuccess(Void result) {
-								TheEventBus.getInstance().fireEvent(new LoginEvent(null));
+								TheEventBus.getInstance().fireEvent(
+										new LoginEvent(null));
 							}
 						});
 
 			}
 		});
 
-		TheEventBus.getInstance().addHandler(LoginEvent.TYPE, new LoginEventHandler() {
+		TheEventBus.getInstance().addHandler(LoginEvent.TYPE,
+				new LoginEventHandler() {
 
-			@Override
-			public void onLogin(LoginEvent event) {
-				UserTO uto = event.getUserTO();
-				if (uto != null) {
-					headerGrid.setWidget(0, 1, new HTML("<p>Logged in as " + uto.getName()
-							+ " &nbsp;&nbsp;&nbsp;</p>"));
-					Harwellcroquet.this.uto = uto;
-					Harwellcroquet.this.headerGrid.setWidget(0, 2, logout);
-				} else {
-					Harwellcroquet.this.headerGrid.setWidget(0, 1, login);
-					Harwellcroquet.this.headerGrid.clearCell(0, 2);
-					History.newItem("home");
-				}
-			}
-		});
+					@Override
+					public void onLogin(LoginEvent event) {
+						UserTO uto = event.getUserTO();
+						if (uto != null) {
+							headerGrid.setWidget(0, 1, new HTML(
+									"<p>Logged in as " + uto.getName()
+											+ " &nbsp;&nbsp;&nbsp;</p>"));
+							Harwellcroquet.this.uto = uto;
+							Harwellcroquet.this.headerGrid.setWidget(0, 2,
+									logout);
+						} else {
+							Harwellcroquet.this.headerGrid.setWidget(0, 1,
+									login);
+							Harwellcroquet.this.headerGrid.clearCell(0, 2);
+							History.newItem("home");
+						}
+					}
+				});
 
 		this.main = new DockLayoutPanel(Unit.EM);
 		RootLayoutPanel.get().add(this.main);
@@ -273,7 +292,8 @@ public class Harwellcroquet implements EntryPoint {
 		this.main.addWest(new ScrollPanel(navPan), 12);
 
 		this.headerGrid = new FlexTable();
-		this.headerGrid.setWidget(0, 0, new HTML("<h1>Harwell Croquet Club</h1>"));
+		this.headerGrid.setWidget(0, 0, new HTML(
+				"<h1>Harwell Croquet Club</h1>"));
 
 		login = new Button("Login");
 		this.headerGrid.setWidget(0, 1, login);
@@ -295,8 +315,8 @@ public class Harwellcroquet implements EntryPoint {
 			TheEventBus.getInstance().fireEvent(new LoginEvent(uto));
 		}
 
-		Element loading = DOM.getElementById("loading");
-		DOM.removeChild(RootPanel.getBodyElement(), loading);
+		Node loading = DOM.getElementById("loading");
+		RootPanel.getBodyElement().removeChild(loading);
 
 		/* Add history listener */
 		History.addValueChangeHandler(new ValueChangeHandler<String>() {
@@ -309,6 +329,8 @@ public class Harwellcroquet implements EntryPoint {
 					displayHome();
 				} else if (token.equals("contact")) {
 					displayContact();
+				} else if (token.equals("roll")) {
+					displayRoll();
 				} else if (token.equals("meetings")) {
 					displayMeetings();
 				} else if (token.equals("files")) {
@@ -366,7 +388,8 @@ public class Harwellcroquet implements EntryPoint {
 					long userId = Long.parseLong(tokens[1]);
 					resetPassword(userId, tokens[2]);
 				} else {
-					logger.severe("Current token is unexpected " + event.getValue());
+					logger.severe("Current token is unexpected "
+							+ event.getValue());
 				}
 			}
 

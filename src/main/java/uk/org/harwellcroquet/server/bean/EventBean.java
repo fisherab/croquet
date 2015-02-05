@@ -29,6 +29,7 @@ import uk.org.harwellcroquet.shared.EntrantTO;
 import uk.org.harwellcroquet.shared.EventTO;
 import uk.org.harwellcroquet.shared.FixtureNameTO;
 import uk.org.harwellcroquet.shared.FixtureTO;
+import uk.org.harwellcroquet.shared.Win;
 
 @Stateless
 public class EventBean {
@@ -39,9 +40,11 @@ public class EventBean {
 	final static Logger logger = Logger.getLogger(EventBean.class);
 
 	// TODO need synchronization here ...
-	final private static DateFormat dateYearFormat = new SimpleDateFormat("yyyy");
+	final private static DateFormat dateYearFormat = new SimpleDateFormat(
+			"yyyy");
 
-	public void add(String sessionid, EventTO eto) throws AuthException, BadInputException {
+	public void add(String sessionid, EventTO eto) throws AuthException,
+			BadInputException {
 		logger.debug("Add an event for year " + eto.getYear());
 		User ui = LoginBean.getUser(entityManager, sessionid);
 		if (ui.getPriv() != User.Priv.SUPER && !ui.isScorer()) {
@@ -57,8 +60,10 @@ public class EventBean {
 			Set<Integer> draw = new HashSet<Integer>();
 			Set<Integer> process = new HashSet<Integer>();
 			for (Entrant entrant : entrants) {
-				if (!draw.add(entrant.getDrawPos()) || !process.add(entrant.getProcessPos())) {
-					throw new BadInputException("Two entrants cannot have same position.");
+				if (!draw.add(entrant.getDrawPos())
+						|| !process.add(entrant.getProcessPos())) {
+					throw new BadInputException(
+							"Two entrants cannot have same position.");
 				}
 			}
 		}
@@ -66,8 +71,9 @@ public class EventBean {
 	}
 
 	public List<String> eventsForYear(int year) {
-		List<Event> evs = entityManager.createNamedQuery("EventsByYear", Event.class).setParameter("year", year)
-				.getResultList();
+		List<Event> evs = entityManager
+				.createNamedQuery("EventsByYear", Event.class)
+				.setParameter("year", year).getResultList();
 		List<String> names = new ArrayList<String>();
 		for (Event ev : evs) {
 			names.add(ev.getName());
@@ -79,7 +85,8 @@ public class EventBean {
 
 	public List<EventTO> listDeletableEvents() {
 		List<EventTO> etos = new ArrayList<EventTO>();
-		List<Event> evs = entityManager.createNamedQuery("AllEvents", Event.class).getResultList();
+		List<Event> evs = entityManager.createNamedQuery("AllEvents",
+				Event.class).getResultList();
 		for (Event ev : evs) {
 			if (ev.getResults().isEmpty()) {
 				etos.add(ev.getTransferObject());
@@ -89,7 +96,8 @@ public class EventBean {
 		return etos;
 	}
 
-	public void delete(String sessionid, List<Long> todelete) throws AuthException {
+	public void delete(String sessionid, List<Long> todelete)
+			throws AuthException {
 		User ui = LoginBean.getUser(entityManager, sessionid);
 		if (ui.getPriv() != User.Priv.SUPER && !ui.isScorer()) {
 			throw new AuthException("You are not allowed to do this");
@@ -100,13 +108,15 @@ public class EventBean {
 	}
 
 	public EventTO getEventForYear(int year, String name) {
-		return entityManager.createNamedQuery("NamedEvent", Event.class).setParameter("year", year)
-				.setParameter("name", name).getSingleResult().getTransferObject();
+		return entityManager.createNamedQuery("NamedEvent", Event.class)
+				.setParameter("year", year).setParameter("name", name)
+				.getSingleResult().getTransferObject();
 	}
 
 	public List<EventTO> getOpenEvents() {
 		List<EventTO> etos = new ArrayList<EventTO>();
-		List<Event> evs = entityManager.createNamedQuery("IncompleteEvents", Event.class).getResultList();
+		List<Event> evs = entityManager.createNamedQuery("IncompleteEvents",
+				Event.class).getResultList();
 		for (Event ev : evs) {
 			etos.add(ev.getTransferObject());
 		}
@@ -118,13 +128,16 @@ public class EventBean {
 		Event newData = new Event(eto);
 		Event event = entityManager.find(Event.class, newData.getId());
 		event.setResults(newData.getResults());
-		event.setComplete(newData.isComplete());
+		event.setWinner(newData.getWinner());
 	}
 
 	public List<Integer> getYears() {
-		List<Date> result1 = entityManager.createNamedQuery("Fixture.Date", Date.class).getResultList();
-		List<Integer> result2 = entityManager.createNamedQuery("Event.Year", Integer.class).getResultList();
-		logger.debug("Found " + result1.size() + " fixture years and " + result2.size() + " event years");
+		List<Date> result1 = entityManager.createNamedQuery("Fixture.Date",
+				Date.class).getResultList();
+		List<Integer> result2 = entityManager.createNamedQuery("Event.Year",
+				Integer.class).getResultList();
+		logger.debug("Found " + result1.size() + " fixture years and "
+				+ result2.size() + " event years");
 		Set<Integer> result12 = new HashSet<Integer>();
 
 		for (Date d : result1) {
@@ -138,7 +151,8 @@ public class EventBean {
 
 	public List<FixtureNameTO> getFixtureNames() {
 		List<FixtureNameTO> results = new ArrayList<FixtureNameTO>();
-		List<FixtureName> fns = entityManager.createNamedQuery("FixtureName.All", FixtureName.class).getResultList();
+		List<FixtureName> fns = entityManager.createNamedQuery(
+				"FixtureName.All", FixtureName.class).getResultList();
 		for (FixtureName fn : fns) {
 			results.add(fn.getTransferObject());
 		}
@@ -154,7 +168,8 @@ public class EventBean {
 					entityManager.persist(fn);
 				}
 			} else {
-				FixtureName fn = entityManager.find(FixtureName.class, fnto.getKey());
+				FixtureName fn = entityManager.find(FixtureName.class,
+						fnto.getKey());
 				if (!fnto.getName().isEmpty()) {
 					fn.setName(fnto.getName());
 				} else {
@@ -164,7 +179,8 @@ public class EventBean {
 		}
 	}
 
-	public List<FixtureTO> getFixturesForYear(int year) throws BadInputException {
+	public List<FixtureTO> getFixturesForYear(int year)
+			throws BadInputException {
 		Date date1;
 		Date date2;
 		try {
@@ -173,8 +189,10 @@ public class EventBean {
 		} catch (ParseException e) {
 			throw new BadInputException(e.getMessage());
 		}
-		List<Fixture> fixtures = entityManager.createNamedQuery("Fixture.ByYear", Fixture.class)
-				.setParameter("date1", date1).setParameter("date2", date2).getResultList();
+		List<Fixture> fixtures = entityManager
+				.createNamedQuery("Fixture.ByYear", Fixture.class)
+				.setParameter("date1", date1).setParameter("date2", date2)
+				.getResultList();
 		List<FixtureTO> ftos = new ArrayList<FixtureTO>();
 		for (Fixture fixture : fixtures) {
 			ftos.add(fixture.getTransferObject());
@@ -184,8 +202,8 @@ public class EventBean {
 
 	public void update(Set<FixtureTO> modified) {
 		for (FixtureTO fto : modified) {
-			logger.debug("Fixture " + fto.getKey() + " for " + fto.getName() + " " + fto.getDate()
-					+ " is being updated/created/deleted");
+			logger.debug("Fixture " + fto.getKey() + " for " + fto.getName()
+					+ " " + fto.getDate() + " is being updated/created/deleted");
 
 			if (fto.getKey() == null) {
 				if (!fto.getName().isEmpty() && !fto.isDelete()) {
@@ -204,7 +222,8 @@ public class EventBean {
 		}
 	}
 
-	public List<String> getFixtureNamesForYear(int year) throws BadInputException {
+	public List<String> getFixtureNamesForYear(int year)
+			throws BadInputException {
 		Set<String> names = new HashSet<String>();
 
 		Date date1;
@@ -215,8 +234,10 @@ public class EventBean {
 		} catch (ParseException e) {
 			throw new BadInputException(e.getMessage());
 		}
-		names.addAll(entityManager.createNamedQuery("Fixture.NameByYear", String.class).setParameter("date1", date1)
-				.setParameter("date2", date2).getResultList());
+		names.addAll(entityManager
+				.createNamedQuery("Fixture.NameByYear", String.class)
+				.setParameter("date1", date1).setParameter("date2", date2)
+				.getResultList());
 
 		logger.debug("Found " + names.size() + " fixtures for " + year);
 		List<String> results = new ArrayList<String>(names);
@@ -224,7 +245,8 @@ public class EventBean {
 		return results;
 	}
 
-	public List<FixtureTO> getFixtures(String sessionid, int year, String name) throws BadInputException, AuthException {
+	public List<FixtureTO> getFixtures(String sessionid, int year, String name)
+			throws BadInputException, AuthException {
 		User ui = LoginBean.getUserTolerant(entityManager, sessionid);
 		List<FixtureTO> ftos = new ArrayList<FixtureTO>();
 		Date date1;
@@ -235,8 +257,10 @@ public class EventBean {
 		} catch (ParseException e) {
 			throw new BadInputException(e.getMessage());
 		}
-		List<Fixture> fixtures = entityManager.createNamedQuery("Fixture.NamedEvent", Fixture.class)
-				.setParameter("date1", date1).setParameter("date2", date2).setParameter("name", name).getResultList();
+		List<Fixture> fixtures = entityManager
+				.createNamedQuery("Fixture.NamedEvent", Fixture.class)
+				.setParameter("date1", date1).setParameter("date2", date2)
+				.setParameter("name", name).getResultList();
 		for (Fixture fixture : fixtures) {
 			FixtureTO fto = fixture.getTransferObject();
 			if (ui == null) {
@@ -257,21 +281,36 @@ public class EventBean {
 			Iterator<Result> it = ev.getResults().iterator();
 			while (it.hasNext()) {
 				Result r = it.next();
-				logger.debug("Consider result between " + r.getUser1().getName() + " and " + r.getUser2().getName());
+				logger.debug("Consider result between "
+						+ r.getUser1().getName() + " and "
+						+ r.getUser2().getName());
 				if (r.getUser1().getId() == uid || r.getUser2().getId() == uid) {
 					it.remove();
-					logger.debug("Deleted result between " + r.getUser1().getName() + " and " + r.getUser2().getName());
+					logger.debug("Deleted result between "
+							+ r.getUser1().getName() + " and "
+							+ r.getUser2().getName());
 				}
 			}
 			ev.getEntrants().remove(entrant);
-			logger.debug("Deleted entrant " + entrant.getUser().getName() + " from " + ev.getName() + " for "
-					+ ev.getYear());
+			logger.debug("Deleted entrant " + entrant.getUser().getName()
+					+ " from " + ev.getName() + " for " + ev.getYear());
 
 			if (ev.getEntrants().size() == 0) {
 				entityManager.remove(ev);
-				logger.debug("Deleted event " + ev.getName() + " for " + ev.getYear() + " as it has no entrants left");
+				logger.debug("Deleted event " + ev.getName() + " for "
+						+ ev.getYear() + " as it has no entrants left");
 			}
 
 		}
+	}
+
+	public List<Win> getRollOfHonour() {
+		List<Win> results = new ArrayList<>();
+		for (Event event : entityManager.createNamedQuery("RollOfHonour",
+				Event.class).getResultList()) {
+			results.add(new Win(event.getYear(), event.getName(), event
+					.getWinner().getName()));
+		}
+		return results;
 	}
 }

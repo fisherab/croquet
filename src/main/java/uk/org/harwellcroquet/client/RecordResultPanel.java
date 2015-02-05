@@ -34,11 +34,14 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class RecordResultPanel extends Composite {
 
-	final private static Logger logger = Logger.getLogger(RecordResultPanel.class.getName());
+	final private static Logger logger = Logger
+			.getLogger(RecordResultPanel.class.getName());
 
 	private VerticalPanel main;
-	private final static EventServiceAsync eventService = EventServiceAsync.Util.getInstance();
-	private final static LoginServiceAsync loginService = LoginServiceAsync.Util.getInstance();
+	private final static EventServiceAsync eventService = EventServiceAsync.Util
+			.getInstance();
+	private final static LoginServiceAsync loginService = LoginServiceAsync.Util
+			.getInstance();
 
 	private Map<String, UserTO> userFromUsername = new HashMap<String, UserTO>();
 	private UserTO as;
@@ -47,7 +50,8 @@ public class RecordResultPanel extends Composite {
 	private boolean first;
 	private boolean scorer;
 	private VerticalPanel wrapper;
-	private final static HTML wait = new HTML("<h2>Waiting for current information ...</h2>");
+	private final static HTML wait = new HTML(
+			"<h2>Waiting for current information ...</h2>");
 
 	public RecordResultPanel(UserTO uto) {
 		this.wrapper = new VerticalPanel();
@@ -59,7 +63,8 @@ public class RecordResultPanel extends Composite {
 			this.scorer = uto.getPriv().equals("SUPER") || uto.isScorer();
 			final ListBox lb = new ListBox();
 			if (scorer) {
-				wrapper.add(new HTML("<h2>As a scorer you may act as someone else</h2>"));
+				wrapper.add(new HTML(
+						"<h2>As a scorer you may act as someone else</h2>"));
 				wrapper.add(lb);
 				lb.addChangeHandler(new ChangeHandler() {
 					@Override
@@ -132,29 +137,36 @@ public class RecordResultPanel extends Composite {
 			for (EventTO eto : etos) {
 				List<EntrantTO> entrants = eto.getEntrants();
 				if (eto.getFormat().equals("DRAWANDPROCESS")) {
-					logger.fine("analyse DRAWANDPROCESS " + eto.getName() + " for " + as);
-					KOTable dkot = new KOTable(KOTable.Type.DRAW, entrants, eto.getResults());
+					logger.fine("analyse DRAWANDPROCESS " + eto.getName()
+							+ " for " + as);
+					KOTable dkot = new KOTable(KOTable.Type.DRAW, entrants,
+							eto.getResults());
 					for (Game g : dkot.getGames()) {
-						logger.fine(g.getUser1() + " vs. " + g.getUser2() + "In DRAW");
+						logger.fine(g.getUser1() + " vs. " + g.getUser2()
+								+ "In DRAW");
 						if (g.getUser1().equals(as)) {
 							display(eto, g.getUser2(), "Draw");
 						} else if (g.getUser2().equals(as)) {
 							display(eto, g.getUser1(), "Draw");
 						}
 					}
-					KOTable pkot = new KOTable(KOTable.Type.PROCESS, entrants, eto.getResults());
+					KOTable pkot = new KOTable(KOTable.Type.PROCESS, entrants,
+							eto.getResults());
 					for (Game g : pkot.getGames()) {
-						logger.fine(g.getUser1() + " vs. " + g.getUser2() + "In PROCESS");
+						logger.fine(g.getUser1() + " vs. " + g.getUser2()
+								+ "In PROCESS");
 						if (g.getUser1().equals(as)) {
 							display(eto, g.getUser2(), "Process");
 						} else if (g.getUser2().equals(as)) {
 							display(eto, g.getUser1(), "Process");
 						}
 					}
-					if (as.equals(dkot.getKOWinner()) && !as.equals(pkot.getKOWinner())
+					if (as.equals(dkot.getKOWinner())
+							&& !as.equals(pkot.getKOWinner())
 							&& pkot.getKOWinner() != null) {
 						display(eto, pkot.getKOWinner(), "Final");
-					} else if (as.equals(pkot.getKOWinner()) && !as.equals(dkot.getKOWinner())
+					} else if (as.equals(pkot.getKOWinner())
+							&& !as.equals(dkot.getKOWinner())
 							&& dkot.getKOWinner() != null) {
 						display(eto, dkot.getKOWinner(), "Final");
 					}
@@ -184,7 +196,8 @@ public class RecordResultPanel extends Composite {
 
 					int block = 0;
 					for (EntrantTO ento : entrants) {
-						if (ento.getUserTO().getId().longValue() == as.getId().longValue()) {
+						if (ento.getUserTO().getId().longValue() == as.getId()
+								.longValue()) {
 							block = ento.getBlock();
 							break;
 						}
@@ -195,20 +208,25 @@ public class RecordResultPanel extends Composite {
 						for (EntrantTO ento : entrants) {
 							if (ento.getBlock() == block) {
 								potential.add(ento.getUserTO());
-								logger.fine("Player: " + ento.getUserTO().toString() + " in block "
-										+ block);
+								logger.fine("Player: "
+										+ ento.getUserTO().toString()
+										+ " in block " + block);
 							}
 						}
 						if (potential.remove(as)) {
-							logger.fine("Removed " + as + " as you can't play yourself");
-							logger.fine("There are " + eto.getResults().size() + " results");
+							logger.fine("Removed " + as
+									+ " as you can't play yourself");
+							logger.fine("There are " + eto.getResults().size()
+									+ " results");
 							for (ResultTO rto : eto.getResults()) {
 								if (rto.getUser1TO().equals(as)) {
 									potential.remove(rto.getUser2TO());
-									logger.fine("Already played " + rto.getUser2TO());
+									logger.fine("Already played "
+											+ rto.getUser2TO());
 								} else if (rto.getUser2TO().equals(as)) {
 									potential.remove(rto.getUser1TO());
-									logger.fine("Already played " + rto.getUser1TO());
+									logger.fine("Already played "
+											+ rto.getUser1TO());
 								}
 							}
 						}
@@ -221,7 +239,8 @@ public class RecordResultPanel extends Composite {
 				}
 			}
 			if (first) {
-				main.add(new HTML("<p>You have no games to play at the moment.</p>"));
+				main.add(new HTML(
+						"<p>You have no games to play at the moment.</p>"));
 			}
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -242,8 +261,8 @@ public class RecordResultPanel extends Composite {
 		} else {
 			dpp = "in the " + dp;
 		}
-		HTML game = new HTML(eto.getYear() + " " + eto.getName() + " " + dpp + " against "
-				+ userTO.getName());
+		HTML game = new HTML(eto.getYear() + " " + eto.getName() + " " + dpp
+				+ " against " + userTO.getName());
 		game.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -317,7 +336,8 @@ public class RecordResultPanel extends Composite {
 							Window.alert("Games cannot be drawn");
 							return;
 						}
-						if (!(((TextBox) g.getWidget(0, 3)).getValue()).trim().isEmpty()) {
+						if (!(((TextBox) g.getWidget(0, 3)).getValue()).trim()
+								.isEmpty()) {
 							if (getScore(0, 3) > getScore(1, 3)) {
 								one++;
 							} else if (getScore(0, 3) < getScore(1, 3)) {
@@ -348,25 +368,26 @@ public class RecordResultPanel extends Composite {
 						if (golf) {
 							user1Score2 = getScore(0, 2);
 							user2Score2 = getScore(1, 2);
-							if (!(((TextBox) g.getWidget(0, 3)).getValue()).trim().isEmpty()) {
+							if (!(((TextBox) g.getWidget(0, 3)).getValue())
+									.trim().isEmpty()) {
 								user1Score3 = getScore(0, 3);
 								user2Score3 = getScore(1, 3);
 							}
 						}
 
 						String dpU = dp.toUpperCase();
-						eto.getResults().add(
-								new ResultTO(null, dpU, as, getScore(0, 1), user1Score2,
-										user1Score3, userTO, getScore(1, 1), user2Score2,
-										user2Score3, me, new Date()));
+						ResultTO rto = new ResultTO(null, dpU, as, getScore(0,
+								1), user1Score2, user1Score3, userTO, getScore(
+								1, 1), user2Score2, user2Score3, me, new Date());
+						eto.getResults().add(rto);
 
 						if (dpU.equals("FINAL")) {
-							eto.setComplete(true);
+							eto.setWinner(KOTable.getWinner(rto));
 						} else if (dpU.equals("NA")) {
 							int nentrants = eto.getEntrants().size();
 							int gamesNeeded = (nentrants * (nentrants - 1)) / 2;
 							if (eto.getResults().size() == gamesNeeded) {
-								eto.setComplete(true);
+								// eto.setWinner(true); TODO
 							}
 						}
 
@@ -390,7 +411,8 @@ public class RecordResultPanel extends Composite {
 			}
 
 			private int getScore(int i, int j) {
-				return Integer.parseInt(((TextBox) g.getWidget(i, j)).getValue());
+				return Integer.parseInt(((TextBox) g.getWidget(i, j))
+						.getValue());
 			}
 		});
 	}

@@ -14,6 +14,15 @@ h2 {
 	margin: 1em 0em .2em 0em;
 }
 
+.rollHeader {
+	font-weight: bold;
+	padding: 0px 10px 0px 0px;
+}
+
+.rollEntry {
+	padding: 0px 10px 0px 0px;
+}
+
 .navPanel td {
 	padding: .3em .45em;
 }

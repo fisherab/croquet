@@ -9,6 +9,7 @@ import uk.org.harwellcroquet.shared.EntrantTO;
 import uk.org.harwellcroquet.shared.EventTO;
 import uk.org.harwellcroquet.shared.FixtureNameTO;
 import uk.org.harwellcroquet.shared.FixtureTO;
+import uk.org.harwellcroquet.shared.Win;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -46,4 +47,5 @@ public interface EventService extends RemoteService {
 
 	void deleteEntrant(List<EntrantTO> entrants);
 
+	List<Win> getRollOfHonour();
 }

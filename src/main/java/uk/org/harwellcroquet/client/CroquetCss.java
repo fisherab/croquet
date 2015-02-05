@@ -6,5 +6,6 @@ public interface CroquetCss extends CssResource {
 
 	String navPanel();
 	String red();
-	
+	String rollHeader();
+	String rollEntry();
 }

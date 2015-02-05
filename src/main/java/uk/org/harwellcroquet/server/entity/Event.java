@@ -19,9 +19,10 @@ import uk.org.harwellcroquet.shared.ResultTO;
 @NamedQueries({
 		@NamedQuery(name = "EventsByYear", query = "SELECT e FROM Event e WHERE e.year = :year ORDER BY e.name"),
 		@NamedQuery(name = "AllEvents", query = "SELECT e FROM Event e"),
-		@NamedQuery(name = "IncompleteEvents", query = "SELECT e FROM Event e WHERE e.complete = False"),
+		@NamedQuery(name = "IncompleteEvents", query = "SELECT e FROM Event e WHERE e.winner IS NULL"),
 		@NamedQuery(name = "Event.Year", query = "SELECT e.year FROM Event e"),
-		@NamedQuery(name = "NamedEvent", query = "SELECT e FROM Event e WHERE e.year = :year AND e.name = :name") })
+		@NamedQuery(name = "NamedEvent", query = "SELECT e FROM Event e WHERE e.year = :year AND e.name = :name"),
+		@NamedQuery(name = "RollOfHonour", query = "SELECT e FROM Event e WHERE e.winner IS NOT NULL ORDER BY e.year DESC") })
 public class Event {
 
 	public enum Format {
@@ -74,7 +75,7 @@ public class Event {
 
 	private int year;
 
-	private Boolean complete;
+	private User winner;
 
 	public Event(EventTO eto) {
 		this.id = eto.getKey();
@@ -82,7 +83,8 @@ public class Event {
 		this.name = eto.getName();
 		this.type = Type.valueOf(eto.getType());
 		this.format = Format.valueOf(eto.getFormat());
-		this.complete = eto.isComplete();
+		this.winner = eto.getWinner() == null ? null
+				: new User(eto.getWinner());
 		for (EntrantTO ento : eto.getEntrants()) {
 			Entrant e = new Entrant(ento);
 			e.setEvent(this);
@@ -100,7 +102,9 @@ public class Event {
 	}
 
 	public EventTO getTransferObject() {
-		EventTO eto = new EventTO(this.id, this.year, this.name, this.type.name(), this.format.name(), this.complete);
+		EventTO eto = new EventTO(this.id, this.year, this.name,
+				this.type.name(), this.format.name(),
+				this.winner == null ? null : this.winner.getTransferObject());
 		for (Entrant entrant : entrants) {
 			eto.getEntrants().add(entrant.getTransferObject());
 		}
@@ -119,12 +123,12 @@ public class Event {
 	public Event() {
 	}
 
-	public boolean isComplete() {
-		return complete;
+	public User getWinner() {
+		return winner;
 	}
 
-	public void setComplete(boolean complete) {
-		this.complete = complete;
+	public void setWinner(User winner) {
+		this.winner = winner;
 	}
 
 	public void setId(long id) {
