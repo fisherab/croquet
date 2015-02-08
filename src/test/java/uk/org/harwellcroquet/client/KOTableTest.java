@@ -18,11 +18,11 @@ public class KOTableTest {
 
 	@Test
 	public void test() {
-		UserTO u1 = new UserTO(1L, null, null, null, null, null, null, null, null, null, null, null, null, null);
-		UserTO u2 = new UserTO(2L, null, null, null, null, null, null, null, null, null, null, null, null, null);
-		UserTO u3 = new UserTO(3L, null, null, null, null, null, null, null, null, null, null, null, null, null);
-		UserTO u4 = new UserTO(4L, null, null, null, null, null, null, null, null, null, null, null, null, null);
-		UserTO u5 = new UserTO(5L, null, null, null, null, null, null, null, null, null, null, null, null, null);
+		UserTO u1 = new UserTO(1L, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+		UserTO u2 = new UserTO(2L, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+		UserTO u3 = new UserTO(3L, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+		UserTO u4 = new UserTO(4L, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+		UserTO u5 = new UserTO(5L, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
 		List<EntrantTO> entrants = new ArrayList<EntrantTO>();
 		EventTO event = new EventTO();

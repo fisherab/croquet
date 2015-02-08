@@ -20,8 +20,8 @@ public class LoginServiceImpl extends ContextRemoteServiceServlet implements Log
 	private LoginBean loginBean;
 
 	@Override
-	public UserTO login(String email, String password) throws AuthException {
-		return loginBean.login(email, password);
+	public UserTO login(String login, String password) throws AuthException {
+		return loginBean.login(login, password);
 	}
 
 	@Override

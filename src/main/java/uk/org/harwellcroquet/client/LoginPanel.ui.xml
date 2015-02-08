@@ -19,8 +19,8 @@
 			<p>Enter user name and password below if you are already registered</p>
 		</g:HTML>
 		<g:HorizontalPanel>
-			<g:Label addStyleNames='{style.label}'>Email</g:Label>
-			<g:TextBox ui:field="email"></g:TextBox>
+			<g:Label addStyleNames='{style.label}'>Login name</g:Label>
+			<g:TextBox ui:field="login"></g:TextBox>
 		</g:HorizontalPanel>
 		<g:HorizontalPanel>
 			<g:Label addStyleNames='{style.label}'>Password</g:Label>
@@ -46,8 +46,8 @@
 				&quot;Submit&quot; below. </p>
 		</g:HTML>
 		<g:HorizontalPanel>
-			<g:Label addStyleNames='{style.label}'>Email</g:Label>
-			<g:TextBox ui:field="forgotEmail"></g:TextBox>
+			<g:Label addStyleNames='{style.label}'>Login name</g:Label>
+			<g:TextBox ui:field="forgotLogin"></g:TextBox>
 		</g:HorizontalPanel>
 		<g:Button ui:field="forgotButton">Submit</g:Button>
 

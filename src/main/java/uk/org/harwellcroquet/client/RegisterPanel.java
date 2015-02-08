@@ -30,9 +30,11 @@ public class RegisterPanel extends Composite {
 		NEW, UPDATE
 	}
 
-	final private static Logger logger = Logger.getLogger(RegisterPanel.class.getName());
+	final private static Logger logger = Logger.getLogger(RegisterPanel.class
+			.getName());
 
-	private final LoginServiceAsync loginService = LoginServiceAsync.Util.getInstance();
+	private final LoginServiceAsync loginService = LoginServiceAsync.Util
+			.getInstance();
 	protected UserTO uto;;
 
 	public RegisterPanel(Op op) {
@@ -42,39 +44,42 @@ public class RegisterPanel extends Composite {
 		ScrollPanel sp = new ScrollPanel(panel);
 
 		if (op == Op.NEW) {
-			panel.add(new HTML("<h2>Registration</h2>"
-					+ "<p>This form is for registration of prospective members of the Harwell Croquet Club. "
-					+ "Once registered you will be able to record your scores in matches, post news items and see "
-					+ "contact information for other members.</p>"
-					+ "<p>After completing the form below and submitting it you will be sent an e-mail "
-					+ "which you must act upon. The purpose of this e-mail is to ensure that nobody "
-					+ "else can register on your behalf. Having followed the instructions in the e-mail "
-					+ "your registration request will be examined by one of the committee and if you are "
-					+ "known your registration will be completed.</p>"
-					+ "<p>We are careful with the registration process because as a registered member, after "
-					+ "logging in, you will be able to see some information about other members. You are "
-					+ "asked below to provide a password. This should not be one you use for services "
-					+ "such as on-line banking.</p>"));
+			panel.add(new HTML(
+					"<h2>Registration</h2>"
+							+ "<p>This form is for registration of prospective members of the Harwell Croquet Club. "
+							+ "Once registered you will be able to record your scores in matches, post news items and see "
+							+ "contact information for other members.</p>"
+							+ "<p>After completing the form below and submitting it you will be sent an e-mail "
+							+ "which you must act upon. The purpose of this e-mail is to ensure that nobody "
+							+ "else can register on your behalf. Having followed the instructions in the e-mail "
+							+ "your registration request will be examined by one of the committee and if you are "
+							+ "known your registration will be completed.</p>"
+							+ "<p>We are careful with the registration process because as a registered member, after "
+							+ "logging in, you will be able to see some information about other members. You are "
+							+ "asked below to provide a password. This should not be one you use for services "
+							+ "such as on-line banking.</p>"));
 		} else {
-			panel.add(new HTML("<h2>Update account information</h2>"
-					+ "<p>This form allows you to update your information. Just change those fields you want "
-					+ "to modify. The password field is shown empty - if it is left empty it will not be changed.</p>"));
+			panel.add(new HTML(
+					"<h2>Update account information</h2>"
+							+ "<p>This form allows you to update your information. Just change those fields you want "
+							+ "to modify. The password field is shown empty - if it is left empty it will not be changed.</p>"));
 		}
 
 		if (op == Op.UPDATE) {
-			this.loginService.getUser(Cookies.getCookie(Consts.COOKIE), new AsyncCallback<UserTO>() {
+			this.loginService.getUser(Cookies.getCookie(Consts.COOKIE),
+					new AsyncCallback<UserTO>() {
 
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert(caught.toString());
-				}
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert(caught.toString());
+						}
 
-				@Override
-				public void onSuccess(UserTO uto) {
-					RegisterPanel.this.uto = uto;
-					RegisterPanel.this.displayTable(panel);
-				}
-			});
+						@Override
+						public void onSuccess(UserTO uto) {
+							RegisterPanel.this.uto = uto;
+							RegisterPanel.this.displayTable(panel);
+						}
+					});
 		} else {
 			this.displayTable(panel);
 		}
@@ -93,6 +98,15 @@ public class RegisterPanel extends Composite {
 		final int nEmail = n++;
 		if (this.uto != null) {
 			email.setValue(this.uto.getEmail());
+		}
+
+		t.setWidget(n, 0, new Label("login"));
+		final TextBox login = new TextBox();
+		t.setWidget(n, 1, login);
+		login.setTitle("Your login name");
+		final int nLogin = n++;
+		if (this.uto != null) {
+			login.setValue(this.uto.getLogin());
 		}
 
 		t.setWidget(n, 0, new Label("Password"));
@@ -138,7 +152,8 @@ public class RegisterPanel extends Composite {
 		t.setWidget(n, 0, new Label("Assoc Handicap"));
 		final TextBox assocHCap = new TextBox();
 		t.setWidget(n, 1, assocHCap);
-		assocHCap.setTitle("Your assocation handicap - leave blank if you don't have one");
+		assocHCap
+				.setTitle("Your assocation handicap - leave blank if you don't have one");
 		final int nAssocHCap = n++;
 		if (this.uto != null) {
 			assocHCap.setValue(this.uto.getAssocHCap());
@@ -175,13 +190,17 @@ public class RegisterPanel extends Composite {
 			}
 		}
 		if (sb.length() > 0) {
-			panel.add(new HTML("<h3>Rights associated with the account</h3><ul>" + sb + "</ul>"));
+			panel.add(new HTML(
+					"<h3>Rights associated with the account</h3><ul>" + sb
+							+ "</ul>"));
 		}
 		if (this.uto != null && this.uto.getPaidPence() != null) {
 			int pounds = this.uto.getPaidPence() / 100;
 			int pence = this.uto.getPaidPence() % 100;
-			panel.add(new HTML("<h3>Subscription</h3><p>Subscription of &pound;" + pounds + "." + pence
-					+ " was paid on " + this.uto.getPaidDate()));
+			panel.add(new HTML(
+					"<h3>Subscription</h3><p>Subscription of &pound;" + pounds
+							+ "." + pence + " was paid on "
+							+ this.uto.getPaidDate()));
 		}
 
 		Button submit = new Button("Submit");
@@ -194,7 +213,8 @@ public class RegisterPanel extends Composite {
 
 			private void check(int n, boolean condition, String message) {
 				if (!condition) {
-					t.setWidget(n, 3, new HTML("<font color=red>" + message + "</font>"));
+					t.setWidget(n, 3, new HTML("<font color=red>" + message
+							+ "</font>"));
 					this.err = true;
 				} else {
 					if (t.getCellCount(n) > 3) {
@@ -208,57 +228,79 @@ public class RegisterPanel extends Composite {
 				this.err = false;
 
 				String ts = email.getValue().trim();
-				this.check(nEmail, ts.length() >= 7 && ts.contains("@") && ts.contains("."),
+				this.check(
+						nEmail,
+						ts.length() >= 7 && ts.contains("@")
+								&& ts.contains("."),
 						"Please enter you full e-mail address");
 
+				ts = login.getValue().trim();
+				this.check(nLogin, !ts.isEmpty(), "Login name cannot be empty");
+
 				if (RegisterPanel.this.uto == null) {
-					this.check(nPwd, pwd.getValue().trim().length() >= 6, "Must be at least six characters");
+					this.check(nPwd, pwd.getValue().trim().length() >= 6,
+							"Must be at least six characters");
 				}
-				this.check(nPwd2, pwd.getValue().trim().equals(pwd2.getValue().trim()), "Passwords must match");
+				this.check(nPwd2,
+						pwd.getValue().trim().equals(pwd2.getValue().trim()),
+						"Passwords must match");
 
 				ts = name.getValue().trim();
-				this.check(nName, ts.length() >= 7 && ts.contains(" "), "Please enter you full name");
+				this.check(nName, ts.length() >= 7 && ts.contains(" "),
+						"Please enter you full name");
 
 				ts = phone1.getValue().trim();
-				this.check(nPhone1, ts.length() >= 10 && ts.matches("^0[ 0-9]*$"),
+				this.check(
+						nPhone1,
+						ts.length() >= 10 && ts.matches("^0[ 0-9]*$"),
 						"Please enter you principal phone number within the UK starting with 0 and with just digits and spaces");
 
 				ts = phone2.getValue().trim();
-				this.check(nPhone2, ts.length() == 0 || ts.matches("^0[0-9]*$"),
+				this.check(nPhone2,
+						ts.length() == 0 || ts.matches("^0[0-9]*$"),
 						"Please enter you secondary phone number or leave blank");
 
 				ts = assocHCap.getValue().trim();
-				this.check(nAssocHCap, ts.length() == 0 || ts.matches("^[0-9\\.-]*$"),
+				this.check(nAssocHCap,
+						ts.length() == 0 || ts.matches("^[0-9\\.-]*$"),
 						"Please enter you assocation handicap (e.g -0.5 or leave blank");
 
 				ts = golfHCap.getValue().trim();
-				this.check(nGolfHCap, ts.length() == 0 || ts.matches("^[0-9\\.-]*$"),
+				this.check(nGolfHCap,
+						ts.length() == 0 || ts.matches("^[0-9\\.-]*$"),
 						"Please enter you golf handicap (e.g 4 or leave blank");
 
 				if (!this.err) {
 					String lpwd = pwd.getValue().trim();
-					if (RegisterPanel.this.uto == null || !pwd.getValue().trim().isEmpty()) {
+					if (RegisterPanel.this.uto == null
+							|| !pwd.getValue().trim().isEmpty()) {
 						lpwd = Utils.getHash(lpwd);
 					}
-					UserTO uTO = new UserTO(null, email.getValue().trim().toLowerCase(), lpwd, name.getValue().trim(),
-							phone1.getValue().trim(), phone2.getValue().trim(), assocHCap.getValue().trim(), golfHCap
-									.getValue().trim(), main.getValue(), null, null, null, null, null);
+					UserTO uTO = new UserTO(null, email.getValue().trim()
+							.toLowerCase(), login.getValue().trim()
+							.toLowerCase(), lpwd, name.getValue().trim(),
+							phone1.getValue().trim(), phone2.getValue().trim(),
+							assocHCap.getValue().trim(), golfHCap.getValue()
+									.trim(), main.getValue(), null, null, null,
+							null, null);
 					if (RegisterPanel.this.uto == null) {
-						RegisterPanel.this.loginService.register(uTO, new AsyncCallback<String>() {
+						RegisterPanel.this.loginService.register(uTO,
+								new AsyncCallback<String>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Window.alert("Failed: " + caught);
-							}
+									@Override
+									public void onFailure(Throwable caught) {
+										Window.alert("Failed: " + caught);
+									}
 
-							@Override
-							public void onSuccess(String result) {
-								Window.alert(result);
-							}
-						});
+									@Override
+									public void onSuccess(String result) {
+										Window.alert(result);
+									}
+								});
 					} else {
 						uTO.setId(uto.getId());
-						RegisterPanel.this.loginService.update(Cookies.getCookie(Consts.COOKIE), uTO,
+						RegisterPanel.this.loginService.update(
+								Cookies.getCookie(Consts.COOKIE), uTO,
 								new AsyncCallback<Void>() {
 
 									@Override

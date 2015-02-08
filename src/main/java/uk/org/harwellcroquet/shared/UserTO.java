@@ -69,6 +69,8 @@ public class UserTO implements IsSerializable {
 
 	private String sessionid;
 
+	private String login;
+
 	public String getSessionid() {
 		return this.sessionid;
 	}
@@ -77,11 +79,13 @@ public class UserTO implements IsSerializable {
 	public UserTO() {
 	}
 
-	public UserTO(Long id, String email, String pwd, String name, String phone1, String phone2, String assocHCap,
-			String golfHCap, Boolean main, Boolean scorer, Boolean treasurer, String priv, Date paidDate,
-			Integer paidPence) {
+	public UserTO(Long id, String email, String login, String pwd, String name,
+			String phone1, String phone2, String assocHCap, String golfHCap,
+			Boolean main, Boolean scorer, Boolean treasurer, String priv,
+			Date paidDate, Integer paidPence) {
 		this.id = id;
 		this.email = email;
+		this.login = login;
 		this.pwd = pwd;
 		this.name = name;
 		this.phone1 = phone1;
@@ -165,6 +169,10 @@ public class UserTO implements IsSerializable {
 		this.pwd = pwd;
 	}
 
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -240,6 +248,10 @@ public class UserTO implements IsSerializable {
 
 	public void setSessionid(String sessionid) {
 		this.sessionid = sessionid;
+	}
+
+	public String getLogin() {
+		return login;
 	}
 
 }

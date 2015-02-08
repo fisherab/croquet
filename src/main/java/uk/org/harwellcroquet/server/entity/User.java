@@ -14,8 +14,8 @@ import uk.org.harwellcroquet.shared.UserTO;
 
 @Entity
 @NamedQueries({
-		@NamedQuery(name = "UserByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
-		@NamedQuery(name = "UserByEmailAndPwd", query = "SELECT u FROM User u WHERE u.email = :email AND u.pwd =:pwd"),
+		@NamedQuery(name = "UserByLogin", query = "SELECT u FROM User u WHERE u.login = :login"),
+		@NamedQuery(name = "UserByLoginAndPwd", query = "SELECT u FROM User u WHERE u.login = :login AND u.pwd =:pwd"),
 		@NamedQuery(name = "AdminUsers", query = "SELECT u FROM User u WHERE u.priv = uk.org.harwellcroquet.server.entity.User$Priv.SUPER"),
 		@NamedQuery(name = "AllCurrentUsers", query = "SELECT u FROM User u WHERE u.priv = uk.org.harwellcroquet.server.entity.User$Priv.NONE OR u.priv = uk.org.harwellcroquet.server.entity.User$Priv.SUPER order by u.name"),
 		@NamedQuery(name = "AllUsers", query = "SELECT u FROM User u order by u.name") })
@@ -24,6 +24,8 @@ public class User {
 	public enum Priv {
 		EMAIL_OK, NEW, NONE, SUPER, EX
 	};
+	
+	private String login;
 
 	private String assocHCap;
 
@@ -59,6 +61,7 @@ public class User {
 	public User(UserTO uTO) {
 		this.id = uTO.getId();
 		this.name = uTO.getName();
+		this.login = uTO.getLogin();
 		this.pwd = uTO.getPwd();
 		this.email = uTO.getEmail();
 		this.phone1 = uTO.getPhone1();
@@ -196,8 +199,16 @@ public class User {
 	}
 
 	public UserTO getTransferObject() {
-		return new UserTO(id, email, pwd, name, phone1, phone2, assocHCap, golfHCap, main, scorer, treasurer,
+		return new UserTO(id, email, login, pwd, name, phone1, phone2, assocHCap, golfHCap, main, scorer, treasurer,
 				priv.name(), paidDate, paidPence);
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
 	}
 
 }

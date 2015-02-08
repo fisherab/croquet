@@ -308,9 +308,14 @@ public class EventBean {
 		List<Win> results = new ArrayList<>();
 		for (Event event : entityManager.createNamedQuery("RollOfHonour",
 				Event.class).getResultList()) {
-			results.add(new Win(event.getYear(), event.getName(), event
-					.getWinner().getName()));
+			logger.debug("Found event " + event.getYear() + " " + event.getName() + " " + (event.getWinner() == null ? "NULL!!!" : event.getWinner().getName()));
+			results.add(new Win(event.getYear(), event.getName(), event.getWinner().getName()));
 		}
+		results.add(new Win(2006, "Founder's Bowl", "Gerald Mitchell"));
+		results.add(new Win(2005, "Founder's Bowl", "Steve Fisher"));
+		
+		results.add(new Win(1999, "Founder's Bowl", "Mike Duck and John Munro"));
+		results.add(new Win(1998, "Founder's Bowl", "Doug Ironside and Gerald Mitchell"));
 		return results;
 	}
 }

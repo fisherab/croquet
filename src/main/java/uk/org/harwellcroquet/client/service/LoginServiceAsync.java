@@ -26,13 +26,14 @@ public interface LoginServiceAsync {
 
 	void getUser(String sessionid, AsyncCallback<UserTO> callback);
 
-	void getUsers(String sessionid, String query, AsyncCallback<List<UserTO>> callback);
+	void getUsers(String sessionid, String query,
+			AsyncCallback<List<UserTO>> callback);
 
 	void login(String email, String password, AsyncCallback<UserTO> callback);
 
 	void logout(String sessionid, AsyncCallback<Void> callback);
 
-	void recover(String email, AsyncCallback<Void> callback);
+	void recover(String login, AsyncCallback<Void> callback);
 
 	void register(UserTO uTO, AsyncCallback<String> callback);
 
@@ -43,7 +44,8 @@ public interface LoginServiceAsync {
 
 	void setOnline(String sessionid, boolean b, AsyncCallback<Void> callback);
 
-	void update(String sessionid, Set<UserTO> modified, AsyncCallback<Void> callback);
+	void update(String sessionid, Set<UserTO> modified,
+			AsyncCallback<Void> callback);
 
 	void update(String sessionid, UserTO uTO, AsyncCallback<Void> callback);
 

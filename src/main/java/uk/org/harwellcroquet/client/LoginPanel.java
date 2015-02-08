@@ -28,27 +28,30 @@ public class LoginPanel extends Composite {
 	interface LoginPanelUiBinder extends UiBinder<Widget, LoginPanel> {
 	}
 
-	private static LoginPanelUiBinder uiBinder = GWT.create(LoginPanelUiBinder.class);
+	private static LoginPanelUiBinder uiBinder = GWT
+			.create(LoginPanelUiBinder.class);
 
-	private final LoginServiceAsync loginService = LoginServiceAsync.Util.getInstance();
-	final private static Logger logger = Logger.getLogger(LoginPanel.class.getName());
+	private final LoginServiceAsync loginService = LoginServiceAsync.Util
+			.getInstance();
+	final private static Logger logger = Logger.getLogger(LoginPanel.class
+			.getName());
 
 	@UiField
-	TextBox email;
+	TextBox login;
 
 	@UiField
-	TextBox forgotEmail;
+	TextBox forgotLogin;
 
 	@UiField
 	TextBox password;
 
 	@UiHandler("loginButton")
 	public void loginButtonClick(ClickEvent e) {
-		String emailV = email.getValue().trim().toLowerCase();
+		String loginV = login.getValue().trim().toLowerCase();
 		String pwdV = Utils.getHash(password.getValue().trim());
 
-		logger.fine("Try logging in with " + emailV + " / " + pwdV);
-		loginService.login(emailV, pwdV, new AsyncCallback<UserTO>() {
+		logger.fine("Try logging in with " + loginV + " / " + pwdV);
+		loginService.login(loginV, pwdV, new AsyncCallback<UserTO>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -61,19 +64,21 @@ public class LoginPanel extends Composite {
 				TheEventBus.getInstance().fireEvent(new HomeChangedEvent());
 				History.newItem("home");
 				Date now = new Date();
-				Date expire = new Date(now.getTime() + Consts.COOKIE_MINUTES * 60000);
+				Date expire = new Date(now.getTime() + Consts.COOKIE_MINUTES
+						* 60000);
 				Cookies.setCookie(Consts.COOKIE, uto.getSessionid(), expire);
-				logger.fine("Cookie " + Consts.COOKIE + " set to " + Cookies.getCookie(Consts.COOKIE));
+				logger.fine("Cookie " + Consts.COOKIE + " set to "
+						+ Cookies.getCookie(Consts.COOKIE));
 			}
 		});
 	}
 
 	@UiHandler("forgotButton")
 	public void forgotButtonClick(ClickEvent event) {
-		String emailV = forgotEmail.getValue().trim().toLowerCase();
+		String loginV = forgotLogin.getValue().trim().toLowerCase();
 
-		logger.fine("Try recovering password for " + emailV);
-		loginService.recover(emailV, new AsyncCallback<Void>() {
+		logger.fine("Try recovering password for " + loginV);
+		loginService.recover(loginV, new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
