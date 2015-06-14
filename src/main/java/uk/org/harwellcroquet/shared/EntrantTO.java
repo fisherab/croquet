@@ -19,6 +19,10 @@ public class EntrantTO implements IsSerializable {
 	// Needed for RPC stuff
 	public EntrantTO() {
 	}
+	
+	public String toString() {
+		return "Entrant: " + userTO;
+	}
 
 	public EntrantTO(Long id, UserTO userTO, Integer drawPos, Integer processPos, Integer block) {
 		this.id = id;

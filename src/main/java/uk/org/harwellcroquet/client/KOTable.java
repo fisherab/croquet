@@ -2,12 +2,15 @@ package uk.org.harwellcroquet.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import uk.org.harwellcroquet.shared.EntrantTO;
 import uk.org.harwellcroquet.shared.ResultTO;
 import uk.org.harwellcroquet.shared.UserTO;
 
 public class KOTable {
+
+	private final static Logger logger = Logger.getLogger(KOTable.class.getSimpleName());
 
 	public class Game {
 
@@ -25,6 +28,10 @@ public class KOTable {
 
 		public UserTO getUser1() {
 			return user1;
+		}
+
+		public String toString() {
+			return "Game between " + user1 + " and " + user2;
 		}
 	}
 
@@ -44,6 +51,10 @@ public class KOTable {
 
 		public UserTO[] getUsers() {
 			return users;
+		}
+
+		public String toString() {
+			return "Round " + users;
 		}
 	}
 
@@ -86,12 +97,17 @@ public class KOTable {
 			for (int i = 0; i < max; i++) {
 				if (oldRound.users[2 * i] == toPlay || oldRound.users[2 * i + 1] == toPlay) {
 					round.users[i] = toPlay;
+					logger.fine("In round " + rounds.size() + " position " + i + " to play");
 				} else if (oldRound.users[2 * i] == null) {
 					round.users[i] = oldRound.users[2 * i + 1];
+					logger.fine("In round " + rounds.size() + " position " + i + " bye");
 				} else if (oldRound.users[2 * i + 1] == null) {
 					round.users[i] = oldRound.users[2 * i];
+					logger.fine("In round " + rounds.size() + " position " + i + " bye");
 				} else {
+					logger.fine("In round " + rounds.size() + " position " + i + " look for result");
 					for (ResultTO result : results) {
+						logger.fine("Consider result of type: " + result.getType() + " for " + type.name());
 						if (result.getType().equals(type.name())) {
 							if ((result.getUser1TO().equals(oldRound.users[2 * i]) && result.getUser2TO().equals(
 									oldRound.users[2 * i + 1]))
@@ -143,8 +159,10 @@ public class KOTable {
 			}
 		}
 		if (one > two) {
+			logger.fine(result.getUser1TO() + " beat " + result.getUser2TO());
 			return result.getUser1TO();
 		} else {
+			logger.fine(result.getUser2TO() + " beat " + result.getUser1TO());
 			return result.getUser2TO();
 		}
 	}
@@ -155,6 +173,11 @@ public class KOTable {
 
 	public ArrayList<Round> getRounds() {
 		return rounds;
+	}
+
+	@Override
+	public String toString() {
+		return rounds.toString();
 	}
 
 }

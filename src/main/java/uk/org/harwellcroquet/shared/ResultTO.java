@@ -137,4 +137,10 @@ public class ResultTO implements IsSerializable {
 		return this.date;
 	}
 
+	@Override
+	public String toString() {
+		return "Result " + date + " " + user1TO + "(" + user1Score1 + "," + user1Score2 + "," + user1Score3 + ") "
+				+ user2TO + "(" + user2Score1 + "," + user2Score2 + "," + user2Score3 + ")";
+	}
+
 }

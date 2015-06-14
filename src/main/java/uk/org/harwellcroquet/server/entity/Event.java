@@ -26,7 +26,7 @@ import uk.org.harwellcroquet.shared.ResultTO;
 public class Event {
 
 	public enum Format {
-		ALLPLAYALL, DRAWANDPROCESS, TWOBLOCKS
+		ALLPLAYALL, DRAWANDPROCESS, TWOBLOCKS, KNOCKOUT
 	}
 
 	public enum Type {

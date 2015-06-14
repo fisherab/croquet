@@ -41,6 +41,10 @@ public class ManageEventsPanel extends Composite {
 	private final static LoginServiceAsync loginService = LoginServiceAsync.Util.getInstance();
 	private final static EventServiceAsync eventService = EventServiceAsync.Util.getInstance();
 	final private static Logger logger = Logger.getLogger(ManageEventsPanel.class.getName());
+	private final static int DRAWANDPROCESS = 1;
+	private final static int ALLPLAYSALL = 2;
+	private final static int TWOBLOCKS = 3;
+	private final static int KNOCKOUT = 4;
 	private VerticalPanel main;
 	private FlexTable g;
 	private final static DateTimeFormat yearFormat = DateTimeFormat.getFormat("yyyy");
@@ -121,12 +125,15 @@ public class ManageEventsPanel extends Composite {
 							}
 							g.setWidget(5, 0, new Label("Entrants"));
 							g.setWidget(5, 1, entrants);
-							if (formatBox.getSelectedIndex() == 1) {
+							if (formatBox.getSelectedIndex() == DRAWANDPROCESS) {
 								entrants.setWidget(0, 1, new Label("Draw #"));
 								entrants.setWidget(0, 2, new Label("Process #"));
-							} else if (formatBox.getSelectedIndex() == 2) {
+							} else if (formatBox.getSelectedIndex() == ALLPLAYSALL) {
 								entrants.setText(0, 0, "");
+							} else if (formatBox.getSelectedIndex() == KNOCKOUT) {
+								entrants.setWidget(0, 1, new Label("Draw #"));
 							}
+
 							g.setText(0, 1, yearBox.getValue());
 							g.setText(1, 1, eventBox.getValue(eventBox.getSelectedIndex()));
 							g.setText(2, 1, typeBox.getValue(typeBox.getSelectedIndex()));
@@ -139,16 +146,18 @@ public class ManageEventsPanel extends Composite {
 						if (index != 0) {
 							String text = usBox.getValue(index);
 							entrants.setText(n, 0, text);
-							if (formatBox.getSelectedIndex() == 1) {
+							if (formatBox.getSelectedIndex() == DRAWANDPROCESS) {
 								TextBox tb = new TextBox();
 								tb.setWidth("4em");
 								entrants.setWidget(n, 1, tb);
 								tb = new TextBox();
 								tb.setWidth("4em");
 								entrants.setWidget(n, 2, tb);
-							}
-
-							else if (formatBox.getSelectedIndex() == 3) {
+							} else if (formatBox.getSelectedIndex() == KNOCKOUT) {
+								TextBox tb = new TextBox();
+								tb.setWidth("4em");
+								entrants.setWidget(n, 1, tb);
+							} else if (formatBox.getSelectedIndex() == TWOBLOCKS) {
 								ListBox lb = new ListBox();
 								lb.addItem("Block 1");
 								lb.addItem("Block 2");
@@ -202,6 +211,7 @@ public class ManageEventsPanel extends Composite {
 		formatBox.addItem("Draw and process");
 		formatBox.addItem("All play all");
 		formatBox.addItem("Two blocks");
+		formatBox.addItem("Knockout");
 		g.setWidget(3, 1, formatBox);
 		formatBox.addChangeHandler(ch);
 
@@ -410,7 +420,7 @@ public class ManageEventsPanel extends Composite {
 					if (good) {
 						EntrantTO entrantTO = new EntrantTO();
 						entrantTO.setUserTO(userFromName.get(entrants.getText(i, 0)));
-						if (formatBox.getSelectedIndex() == 1) {
+						if (formatBox.getSelectedIndex() == DRAWANDPROCESS) {
 							try {
 								int draw = Integer.parseInt(((TextBox) entrants.getWidget(i, 1)).getValue());
 								int process = Integer.parseInt(((TextBox) entrants.getWidget(i, 2)).getValue());
@@ -424,10 +434,22 @@ public class ManageEventsPanel extends Composite {
 								good = false;
 								Window.alert("Draw and process position must be integers greater than zero");
 							}
-						}
-						if (formatBox.getSelectedIndex() == 3) {
+						} else if (formatBox.getSelectedIndex() == TWOBLOCKS) {
 							int block = ((ListBox) entrants.getWidget(i, 1)).getSelectedIndex() + 1;
 							entrantTO.setBlock(block);
+						} else if (formatBox.getSelectedIndex() == KNOCKOUT) {
+							try {
+								int draw = Integer.parseInt(((TextBox) entrants.getWidget(i, 1)).getValue());
+
+								if (draw <= 0) {
+									good = false;
+									Window.alert("Draw position must be integer greater than zero");
+								}
+								entrantTO.setDrawPos(draw);
+							} catch (NumberFormatException e) {
+								good = false;
+								Window.alert("Draw position must be integer greater than zero");
+							}
 						}
 						eto.getEntrants().add(entrantTO);
 					}

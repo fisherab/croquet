@@ -38,8 +38,7 @@ public class EventTO implements IsSerializable {
 	public EventTO() {
 	}
 
-	public EventTO(Long id, Integer year, String name, String type,
-			String format, UserTO winner) {
+	public EventTO(Long id, Integer year, String name, String type, String format, UserTO winner) {
 		this.id = id;
 		this.year = year;
 		this.name = name;
@@ -100,4 +99,8 @@ public class EventTO implements IsSerializable {
 		this.winner = winner;
 	}
 
+	@Override
+	public String toString() {
+		return "Event " + name + " " + year + " " + entrants + " " + results;
+	}
 }

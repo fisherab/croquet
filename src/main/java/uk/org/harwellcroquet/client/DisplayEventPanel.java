@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import uk.org.harwellcroquet.client.KOTable.Round;
 import uk.org.harwellcroquet.client.service.EventServiceAsync;
@@ -36,6 +37,7 @@ public class DisplayEventPanel extends Composite {
 	private final static EventServiceAsync eventService = EventServiceAsync.Util.getInstance();
 	private final static LoginServiceAsync loginService = LoginServiceAsync.Util.getInstance();
 	private final static HTML wait = new HTML("<h2>Waiting for current information ...</h2>");
+	private final static Logger logger = Logger.getLogger(DisplayEventPanel.class.getSimpleName());
 
 	public DisplayEventPanel(int year, String name) {
 		this.main = new VerticalPanel();
@@ -43,42 +45,40 @@ public class DisplayEventPanel extends Composite {
 		this.name = name;
 		this.main.add(wait);
 
-		loginService.getUsers(Cookies.getCookie(Consts.COOKIE), "AllUsers",
-				new AsyncCallback<List<UserTO>>() {
+		loginService.getUsers(Cookies.getCookie(Consts.COOKIE), "AllUsers", new AsyncCallback<List<UserTO>>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						main.remove(wait);
-						Window.alert(caught.toString());
-						History.newItem("home");
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				main.remove(wait);
+				Window.alert(caught.toString());
+				History.newItem("home");
+			}
 
-					@Override
-					public void onSuccess(List<UserTO> result) {
-						main.remove(wait);
-						eventService.getEventForYear(DisplayEventPanel.this.year,
-								DisplayEventPanel.this.name, new AsyncCallback<EventTO>() {
-									@Override
-									public void onFailure(Throwable caught) {
-										Window.alert("Failure " + caught);
-									}
+			@Override
+			public void onSuccess(List<UserTO> result) {
+				main.remove(wait);
+				eventService.getEventForYear(DisplayEventPanel.this.year, DisplayEventPanel.this.name,
+						new AsyncCallback<EventTO>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Window.alert("Failure " + caught);
+							}
 
-									@Override
-									public void onSuccess(EventTO eto) {
-										displayData(eto);
-
-									}
-								});
-					}
-				});
+							@Override
+							public void onSuccess(EventTO eto) {
+								displayData(eto);
+							}
+						});
+			}
+		});
 
 		this.initWidget(this.main);
 
 	}
 
 	private void displayData(EventTO eto) {
-		main.add(new HTML("<h2>Results for " + year + " " + name + " "
-				+ eto.getType().toLowerCase() + " event</h2>"));
+		logger.fine("Display data for format " + eto.getFormat());
+		main.add(new HTML("<h2>Results for " + year + " " + name + " " + eto.getType().toLowerCase() + " event</h2>"));
 
 		if (eto.getFormat().equals("DRAWANDPROCESS")) {
 			displayDP("Draw", eto);
@@ -92,12 +92,13 @@ public class DisplayEventPanel extends Composite {
 					} else {
 						loser = r.getUser1TO();
 					}
-					main.add(new HTML("<h3>" + winner.getName() + " beat " + loser.getName()
-							+ " in the final.</h3>"));
+					main.add(new HTML("<h3>" + winner.getName() + " beat " + loser.getName() + " in the final.</h3>"));
 				}
 			}
 		} else if (eto.getFormat().equals("ALLPLAYALL")) {
 			displayAPA(eto, null);
+		} else if (eto.getFormat().equals("KNOCKOUT")) {
+			displayDP("Draw", eto);
 		} else { // TWOBLOCKS
 			displayAPA(eto, 1);
 			displayAPA(eto, 2);
@@ -209,7 +210,9 @@ public class DisplayEventPanel extends Composite {
 		main.add(ft);
 		KOTable kot = null;
 		if (title.equals("Draw")) {
+			logger.fine(eto.toString());
 			kot = new KOTable(KOTable.Type.DRAW, eto.getEntrants(), eto.getResults());
+			logger.fine(kot.toString());
 		} else {
 			kot = new KOTable(KOTable.Type.PROCESS, eto.getEntrants(), eto.getResults());
 		}

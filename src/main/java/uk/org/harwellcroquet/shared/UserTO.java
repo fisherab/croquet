@@ -79,9 +79,8 @@ public class UserTO implements IsSerializable {
 	public UserTO() {
 	}
 
-	public UserTO(Long id, String email, String login, String pwd, String name,
-			String phone1, String phone2, String assocHCap, String golfHCap,
-			Boolean main, Boolean scorer, Boolean treasurer, String priv,
+	public UserTO(Long id, String email, String login, String pwd, String name, String phone1, String phone2,
+			String assocHCap, String golfHCap, Boolean main, Boolean scorer, Boolean treasurer, String priv,
 			Date paidDate, Integer paidPence) {
 		this.id = id;
 		this.email = email;
@@ -225,7 +224,7 @@ public class UserTO implements IsSerializable {
 	}
 
 	public String toString() {
-		return "User id " + id + " -> " + email + " " + name;
+		return "User " + name + "(" + id + ")";
 	}
 
 	@Override
