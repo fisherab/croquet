@@ -111,8 +111,8 @@ public class CreateItemPanel extends Composite {
 			public void onClick(ClickEvent event) {
 				if (type == Type.CONTACT) {
 					String[] bits = CreateItemPanel.this.content.getValue().split(":");
-					if (bits.length != 2) {
-						Window.alert(CreateItemPanel.this.content.getValue() + " must have exactly one colon");
+					if (bits.length != 3) {
+						Window.alert(CreateItemPanel.this.content.getValue() + " must have exactly two colons");
 						return;
 					}
 				}

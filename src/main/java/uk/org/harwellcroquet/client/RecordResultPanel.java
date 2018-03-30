@@ -266,8 +266,8 @@ public class RecordResultPanel extends Composite {
 		aResult = new VerticalPanel();
 		main.add(aResult);
 		aResult.add(new HTML("<h2>Record one match</h2>"));
-		final boolean golf = eto.getType().equals("GOLF");
-		if (golf) {
+		final boolean three = eto.getBestOf() == 3;
+		if (three) {
 			aResult.add(new HTML("<p>If there were only two games played then leave the last one blank"));
 		}
 		String dpp = null;
@@ -285,7 +285,7 @@ public class RecordResultPanel extends Composite {
 		g.getWidget(0, 1).setWidth("3em");
 		g.setWidget(1, 1, new TextBox());
 		g.getWidget(1, 1).setWidth("3em");
-		if (golf) {
+		if (three) {
 			g.setWidget(0, 2, new TextBox());
 			g.getWidget(0, 2).setWidth("3em");
 			g.setWidget(1, 2, new TextBox());
@@ -312,7 +312,7 @@ public class RecordResultPanel extends Composite {
 						Window.alert("Games cannot be drawn");
 						return;
 					}
-					if (golf) {
+					if (three) {
 						if (getScore(0, 2) > getScore(1, 2)) {
 							one++;
 						} else if (getScore(0, 2) < getScore(1, 2)) {
@@ -349,7 +349,7 @@ public class RecordResultPanel extends Composite {
 						Integer user2Score2 = null;
 						Integer user1Score3 = null;
 						Integer user2Score3 = null;
-						if (golf) {
+						if (three) {
 							user1Score2 = getScore(0, 2);
 							user2Score2 = getScore(1, 2);
 							if (!(((TextBox) g.getWidget(0, 3)).getValue()).trim().isEmpty()) {
@@ -388,7 +388,8 @@ public class RecordResultPanel extends Composite {
 						});
 					}
 				} catch (NumberFormatException e) {
-					Window.alert("Boxes must contain integers only - a blank is only permissible if a third game was not required");
+					Window.alert(
+							"Boxes must contain integers only - a blank is only permissible if a third game was not required");
 				}
 			}
 

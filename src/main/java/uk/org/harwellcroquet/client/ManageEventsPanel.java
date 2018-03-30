@@ -62,6 +62,7 @@ public class ManageEventsPanel extends Composite {
 	private Button dapply;
 	private FlexTable entrantsToGo;
 	private Button applyEntrants;
+	private ListBox bestOfBox;
 
 	public ManageEventsPanel() {
 		ch = new ChangeHandler() {
@@ -71,7 +72,8 @@ public class ManageEventsPanel extends Composite {
 				if (!yearBox.getValue().trim().isEmpty()
 						&& !eventBox.getValue(eventBox.getSelectedIndex()).trim().isEmpty()
 						&& !typeBox.getValue(typeBox.getSelectedIndex()).isEmpty()
-						&& !formatBox.getValue(formatBox.getSelectedIndex()).isEmpty()) {
+						&& !formatBox.getValue(formatBox.getSelectedIndex()).isEmpty()
+						&& !bestOfBox.getValue(bestOfBox.getSelectedIndex()).isEmpty()) {
 					g.setWidget(4, 0, new Label("Add entrant"));
 					g.setWidget(4, 1, usBox);
 				}
@@ -115,8 +117,8 @@ public class ManageEventsPanel extends Composite {
 									throw new NumberFormatException();
 								}
 							} catch (NumberFormatException e) {
-								g.setWidget(0, 2, new HTML(
-										"<p style=\"color:red\">Year must be between 2000 and 2999.</p>"));
+								g.setWidget(0, 2,
+										new HTML("<p style=\"color:red\">Year must be between 2000 and 2999.</p>"));
 								usBox.setItemSelected(0, true);
 								return;
 							}
@@ -172,10 +174,8 @@ public class ManageEventsPanel extends Composite {
 		});
 
 		this.main.add(new HTML("<h2>Create an event</h2>"));
-		this.main
-				.add(new HTML(
-						"<p>An event once created cannot be changed. It can only be deleted "
-								+ "if no results are associated with it. Individual entrants can be removed until such time as an event is complete.</p>"));
+		this.main.add(new HTML("<p>An event once created cannot be changed. It can only be deleted "
+				+ "if no results are associated with it. Individual entrants can be removed until such time as an event is complete.</p>"));
 
 		this.main.add(g);
 		g.setCellSpacing(5);
@@ -190,7 +190,7 @@ public class ManageEventsPanel extends Composite {
 		eventBox = new ListBox();
 		eventBox.setWidth("20em");
 		eventBox.addItem("");
-		eventBox.addItem("Founder's Bowl");
+		eventBox.addItem("Founder's Cup");
 		eventBox.addItem("Harwell GC Competition");
 		g.setWidget(1, 1, eventBox);
 		eventBox.addChangeHandler(ch);
@@ -214,6 +214,15 @@ public class ManageEventsPanel extends Composite {
 		formatBox.addItem("Knockout");
 		g.setWidget(3, 1, formatBox);
 		formatBox.addChangeHandler(ch);
+
+		g.setWidget(4, 0, new Label("Best of"));
+		bestOfBox = new ListBox();
+		bestOfBox.setWidth("10em");
+		bestOfBox.addItem("");
+		bestOfBox.addItem("1");
+		bestOfBox.addItem("3");
+		g.setWidget(4, 1, bestOfBox);
+		bestOfBox.addChangeHandler(ch);
 
 		bs = new HorizontalPanel();
 		main.add(bs);
@@ -297,9 +306,8 @@ public class ManageEventsPanel extends Composite {
 		// Now for the remove entrant section
 
 		this.main.add(new HTML("<h2>Entrants that may be deleted</h2>"));
-		this.main
-				.add(new HTML(
-						"<p>Individual entrants can be removed until such time as an event is complete. This will remove all record of any games the player may have taken part in.</p>"));
+		this.main.add(new HTML(
+				"<p>Individual entrants can be removed until such time as an event is complete. This will remove all record of any games the player may have taken part in.</p>"));
 
 		entrantsToGo = new FlexTable();
 		this.main.add(entrantsToGo);
@@ -411,10 +419,11 @@ public class ManageEventsPanel extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				int n = entrants.getRowCount();
-				EventTO eto = new EventTO(null, Integer.parseInt(yearBox.getValue().trim()), eventBox.getValue(eventBox
-						.getSelectedIndex()), typeBox.getValue(typeBox.getSelectedIndex()).replace(" ", "")
-						.toUpperCase(),
-						formatBox.getValue(formatBox.getSelectedIndex()).replace(" ", "").toUpperCase(), null);
+				EventTO eto = new EventTO(null, Integer.parseInt(yearBox.getValue().trim()),
+						eventBox.getValue(eventBox.getSelectedIndex()),
+						typeBox.getValue(typeBox.getSelectedIndex()).replace(" ", "").toUpperCase(),
+						formatBox.getValue(formatBox.getSelectedIndex()).replace(" ", "").toUpperCase(),
+						Integer.parseInt(bestOfBox.getValue(bestOfBox.getSelectedIndex()).trim()), null);
 				boolean good = true;
 				for (int i = 1; i < n; i++) {
 					if (good) {

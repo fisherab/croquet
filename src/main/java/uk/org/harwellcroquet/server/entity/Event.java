@@ -77,14 +77,16 @@ public class Event {
 
 	private User winner;
 
+	private int bestOf;
+
 	public Event(EventTO eto) {
 		this.id = eto.getKey();
 		this.year = eto.getYear();
 		this.name = eto.getName();
 		this.type = Type.valueOf(eto.getType());
 		this.format = Format.valueOf(eto.getFormat());
-		this.winner = eto.getWinner() == null ? null
-				: new User(eto.getWinner());
+		this.bestOf = eto.getBestOf();
+		this.winner = eto.getWinner() == null ? null : new User(eto.getWinner());
 		for (EntrantTO ento : eto.getEntrants()) {
 			Entrant e = new Entrant(ento);
 			e.setEvent(this);
@@ -102,8 +104,7 @@ public class Event {
 	}
 
 	public EventTO getTransferObject() {
-		EventTO eto = new EventTO(this.id, this.year, this.name,
-				this.type.name(), this.format.name(),
+		EventTO eto = new EventTO(this.id, this.year, this.name, this.type.name(), this.format.name(), this.bestOf,
 				this.winner == null ? null : this.winner.getTransferObject());
 		for (Entrant entrant : entrants) {
 			eto.getEntrants().add(entrant.getTransferObject());
@@ -149,6 +150,10 @@ public class Event {
 
 	public void setFormat(Format format) {
 		this.format = format;
+	}
+
+	public int getBestOf() {
+		return bestOf;
 	}
 
 }

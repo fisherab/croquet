@@ -157,6 +157,23 @@ public class ModifyAccountsPanel extends Composite {
 				ModifyAccountsPanel.this.apply.setEnabled(true);
 			}
 		});
+		
+		Column<UserTO, String> loginColumn = new Column<UserTO, String>(new TextInputCell()) {
+
+			@Override
+			public String getValue(UserTO uto) {
+				return uto.getLogin();
+			}
+		};
+		loginColumn.setFieldUpdater(new FieldUpdater<UserTO, String>() {
+			@Override
+			public void update(int index, UserTO uto, String value) {
+				uto.setLogin(value);
+				ModifyAccountsPanel.this.modified.add(uto);
+				ModifyAccountsPanel.this.apply.setEnabled(true);
+			}
+		});
+
 
 		Column<UserTO, String> nameColumn = new Column<UserTO, String>(new TextInputCell()) {
 
@@ -350,6 +367,7 @@ public class ModifyAccountsPanel extends Composite {
 		this.table.setWidth("auto", true);
 		this.table.addColumn(idColumn, "Key");
 		this.table.addColumn(emailColumn, "Email");
+		this.table.addColumn(loginColumn, "Login");
 		this.table.addColumn(nameColumn, "Name");
 		this.table.addColumn(phone1Column, "Phone1");
 		this.table.addColumn(phone2Column, "Phone2");

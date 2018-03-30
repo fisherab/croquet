@@ -37,8 +37,8 @@ public class ItemBean {
 
 	public String getNavigationHtml() {
 		logger.debug("getNavigationHtml");
-		List<Item> results = entityManager.createNamedQuery("ItemByType", Item.class)
-				.setParameter("type", "NAV").getResultList();
+		List<Item> results = entityManager.createNamedQuery("ItemByType", Item.class).setParameter("type", "NAV")
+				.getResultList();
 		logger.debug("Retrieved " + results.size() + " rows.");
 		StringBuilder sb = new StringBuilder();
 		sb.append("<table>");
@@ -52,9 +52,8 @@ public class ItemBean {
 	public void add(String sessionid, ItemTO ito) throws BadInputException, AuthException {
 		logger.debug("Add an item");
 		User ui = LoginBean.getUser(entityManager, sessionid);
-		Integer seq = entityManager.createNamedQuery("MaxSeq", Integer.class)
-				.setParameter("type", ito.getType()).setParameter("user", ui.getId())
-				.getSingleResult();
+		Integer seq = entityManager.createNamedQuery("MaxSeq", Integer.class).setParameter("type", ito.getType())
+				.setParameter("user", ui.getId()).getSingleResult();
 		if (seq == null) {
 			seq = 0;
 		} else {
@@ -70,8 +69,7 @@ public class ItemBean {
 		logger.debug("Construct HTML for home page");
 
 		StringBuilder sb = new StringBuilder("<div>");
-		TypedQuery<Item> query = entityManager.createNamedQuery("ItemByType", Item.class)
-				.setParameter("type", "BODY");
+		TypedQuery<Item> query = entityManager.createNamedQuery("ItemByType", Item.class).setParameter("type", "BODY");
 		for (Item item : query.getResultList()) {
 			sb.append(item.getContent());
 		}
@@ -80,17 +78,15 @@ public class ItemBean {
 		List<Item> items = entityManager.createNamedQuery("ItemByTypeDateOrdered", Item.class)
 				.setParameter("type", "news").getResultList();
 		for (Item item : items) {
-			sb.append("<li>").append(dateFormat.format(item.getDate())).append("&nbsp;")
-					.append(item.getContent()).append("&nbsp;&nbsp;<i>")
-					.append(item.getUser().getName()).append("</i></li>");
+			sb.append("<li>").append(dateFormat.format(item.getDate())).append("&nbsp;").append(item.getContent())
+					.append("&nbsp;&nbsp;<i>").append(item.getUser().getName()).append("</i></li>");
 		}
 		sb.append("</ul></div>");
 		return sb.toString();
 
 	}
 
-	public List<ItemTO> getItems(String sessionid, String type) throws AuthException,
-			InternalException {
+	public List<ItemTO> getItems(String sessionid, String type) throws AuthException, InternalException {
 		logger.debug("getItems");
 		User ui = LoginBean.getUser(entityManager, sessionid);
 		TypedQuery<Item> query = null;
@@ -110,16 +106,14 @@ public class ItemBean {
 		return ittos;
 	}
 
-	public void update(String sessionid, Set<ItemTO> modified) throws AuthException,
-			BadInputException {
+	public void update(String sessionid, Set<ItemTO> modified) throws AuthException, BadInputException {
 		logger.debug("Update " + modified.size() + " items");
 		User ui = LoginBean.getUser(entityManager, sessionid);
 
 		for (ItemTO to : modified) {
 			Item itemo = entityManager.find(Item.class, to.getId());
 			if (ui.getId() != itemo.getUser().getId() && ui.getPriv() != User.Priv.SUPER) {
-				throw new AuthException(
-						"You must be admin or the owner of the item to make this call");
+				throw new AuthException("You must be admin or the owner of the item to make this call");
 			}
 			if (to.isDelete()) {
 				entityManager.remove(itemo);
@@ -133,17 +127,24 @@ public class ItemBean {
 	public String getContactHtml() throws BadInputException {
 		logger.debug("getContactHtml");
 		StringBuilder sb = new StringBuilder("<h2>Contacts</h2><table>");
-		List<Item> contacts = entityManager.createNamedQuery("ItemByType", Item.class)
-				.setParameter("type", "CONTACT").getResultList();
+		List<Item> contacts = entityManager.createNamedQuery("ItemByType", Item.class).setParameter("type", "CONTACT")
+				.getResultList();
 
 		for (Item item : contacts) {
 			String[] bits = item.getContent().split(":");
-			if (bits.length == 2) {
+			if (bits.length == 3) {
 				User u = entityManager.find(User.class, Long.parseLong(bits[1]));
-				sb.append("<tr><td>").append(bits[0]).append("</td><td>").append(u.getName())
-						.append("</td><td><a href=\"mailto:").append(u.getEmail()).append("\">")
-						.append(u.getEmail()).append("</a></td><td>").append(u.getPhone1())
-						.append("</td><td>").append(u.getPhone2()).append("</td></tr>");
+				String opts = bits[2].toUpperCase();
+				sb.append("<tr><td>").append(bits[0]).append("</td><td>").append(u.getName()).append("</td><td>");
+				if (opts.indexOf('E') >= 0) {
+					sb.append("<a href=\"mailto:").append(u.getEmail()).append("\">").append(u.getEmail())
+							.append("</a>");
+				}
+				sb.append("</td><td>");
+				if (opts.indexOf('P') >= 0) {
+					sb.append(u.getPhone1()).append("</td><td>").append(u.getPhone2());
+				}
+				sb.append("</td></tr>");
 			}
 		}
 		sb.append("</table>");

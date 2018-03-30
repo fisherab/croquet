@@ -50,7 +50,7 @@ public class LoginBean {
 
 	private String mailPassword;
 
-	private String mailStmpHost;
+	private String mailSmtpHost;
 
 	private String mailUserDesc;
 
@@ -58,16 +58,13 @@ public class LoginBean {
 
 	final private static long statusKey = 1L;
 
-	public static User getUser(EntityManager entityManager, String sessionid)
-			throws AuthException {
+	public static User getUser(EntityManager entityManager, String sessionid) throws AuthException {
 		if (sessionid == null) {
-			throw new AuthException(
-					"Please log in again - your session has expired");
+			throw new AuthException("Please log in again - your session has expired");
 		}
 		Session session = entityManager.find(Session.class, sessionid);
 		if (session == null) {
-			throw new AuthException(
-					"Please log in again - your session has expired");
+			throw new AuthException("Please log in again - your session has expired");
 		}
 		User u = session.getUser();
 		logger.debug("Access by " + u.getName() + " requested");
@@ -75,8 +72,7 @@ public class LoginBean {
 
 	}
 
-	static User getUserTolerant(EntityManager entityManager, String sessionid)
-			throws AuthException {
+	static User getUserTolerant(EntityManager entityManager, String sessionid) throws AuthException {
 		if (sessionid == null) {
 			logger.debug("Access by ?? - no session");
 			return null;
@@ -91,8 +87,7 @@ public class LoginBean {
 		return u;
 	}
 
-	public UserTO getUser(String sessionid) throws InternalException,
-			AuthException {
+	public UserTO getUser(String sessionid) throws InternalException, AuthException {
 		logger.info("Finding current user from LoginBean");
 		User u = LoginBean.getUserTolerant(entityManager, sessionid);
 
@@ -110,12 +105,10 @@ public class LoginBean {
 		return itto;
 	}
 
-	public List<UserTO> getUsers(String sessionid, String queryString)
-			throws AuthException {
+	public List<UserTO> getUsers(String sessionid, String queryString) throws AuthException {
 		User ui = LoginBean.getUserTolerant(entityManager, sessionid);
 		List<UserTO> ittos = new ArrayList<UserTO>();
-		TypedQuery<User> query = entityManager.createNamedQuery(queryString,
-				User.class);
+		TypedQuery<User> query = entityManager.createNamedQuery(queryString, User.class);
 		for (User u : query.getResultList()) {
 			UserTO itto = null;
 			if (ui == null) {
@@ -140,16 +133,15 @@ public class LoginBean {
 	private void init() {
 		try {
 			Properties props = new Properties();
-			InputStream inStream = new FileInputStream(new File(
-					"croquet.properties"));
+			InputStream inStream = new FileInputStream(new File("croquet.properties"));
 			props.load(inStream);
 
 			verifyUrl = getStringProperty(props, "verifyUrl");
-			mailStmpHost = getStringProperty(props, "mail.smtp.host");
+			mailSmtpHost = getStringProperty(props, "mail.smtp.host");
 			mailUserDesc = getStringProperty(props, "mail.userDesc");
 
 			mailProps = new Properties();
-			mailProps.put("mail.smtp.host", mailStmpHost);
+			mailProps.put("mail.smtp.host", mailSmtpHost);
 			mailProps.put("mail.smtp.socketFactory.port", "587");
 			mailProps.put("mail.smtp.auth", "true");
 			mailProps.put("mail.smtp.port", "587");
@@ -165,8 +157,7 @@ public class LoginBean {
 		}
 	}
 
-	private String getStringProperty(Properties props, String key)
-			throws UnavailableException {
+	private String getStringProperty(Properties props, String key) throws UnavailableException {
 		String value = props.getProperty(key);
 		if (value == null) {
 			throw new UnavailableException(key + " property must be set");
@@ -176,8 +167,7 @@ public class LoginBean {
 
 	public UserTO login(String login, String pwd) throws AuthException {
 		logger.info("LoginBean.login request for " + login);
-		TypedQuery<User> query = entityManager.createNamedQuery(
-				"UserByLoginAndPwd", User.class);
+		TypedQuery<User> query = entityManager.createNamedQuery("UserByLoginAndPwd", User.class);
 		query.setParameter("login", login);
 		query.setParameter("pwd", pwd);
 		List<User> us = query.getResultList();
@@ -190,8 +180,7 @@ public class LoginBean {
 			throw new AuthException("This account needs e-mail verification");
 		}
 		if (priv == User.Priv.EMAIL_OK) {
-			throw new AuthException(
-					"This account is waiting for a human to approve it");
+			throw new AuthException("This account is waiting for a human to approve it");
 		}
 		if (priv == User.Priv.EX) {
 			throw new AuthException("This account is not currently active");
@@ -225,10 +214,8 @@ public class LoginBean {
 		}
 	}
 
-	public String register(HttpServletRequest req, UserTO uTO)
-			throws InternalException, AuthException {
-		logger.info("Request registration of " + uTO.getName() + " as "
-				+ uTO.getEmail());
+	public String register(HttpServletRequest req, UserTO uTO) throws InternalException, AuthException {
+		logger.info("Request registration of " + uTO.getName() + " as " + uTO.getEmail());
 
 		User u = new User(uTO);
 
@@ -244,11 +231,9 @@ public class LoginBean {
 			s.setOnline(false);
 			entityManager.persist(s);
 		}
-		Query query = entityManager.createNamedQuery("UserByLogin")
-				.setParameter("login", u.getLogin());
+		Query query = entityManager.createNamedQuery("UserByLogin").setParameter("login", u.getLogin());
 		if (!query.getResultList().isEmpty()) {
-			throw new AuthException("The login name " + u.getLogin()
-					+ " is already in use");
+			throw new AuthException("The login name " + u.getLogin() + " is already in use");
 		}
 		entityManager.persist(u);
 
@@ -263,11 +248,8 @@ public class LoginBean {
 			String msgBody = "You, or somebody pretending to be you, has signed up for the "
 					+ "Harwell Croquet Club web site. If it is you, then please click on the following "
 					+ "link to alert a human to approve your application. Humans are not as "
-					+ "quick as computers so please be patient.\n\n"
-					+ url
-					+ "\n\n"
-					+ "If it is not you then you need do nothing."
-					+ "\n\nHarwell Croquet Web Admin.";
+					+ "quick as computers so please be patient.\n\n" + url + "\n\n"
+					+ "If it is not you then you need do nothing." + "\n\nHarwell Croquet Web Admin.";
 
 			String subject = "Harwell Croquet Club website account creation";
 
@@ -278,23 +260,18 @@ public class LoginBean {
 
 	}
 
-	private void sendMail(String email, String name, String subject,
-			String msgBody) throws InternalException {
+	private void sendMail(String email, String name, String subject, String msgBody) throws InternalException {
 
-		javax.mail.Session session = javax.mail.Session.getInstance(mailProps,
-				new javax.mail.Authenticator() {
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(mailUserName,
-								mailPassword);
-					}
-				});
+		javax.mail.Session session = javax.mail.Session.getInstance(mailProps, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(mailUserName, mailPassword);
+			}
+		});
 
 		try {
 			Message msg = new MimeMessage(session);
-			msg.setFrom(new InternetAddress(mailUserName + "@" + mailStmpHost,
-					mailUserDesc));
-			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(
-					email, name));
+			msg.setFrom(new InternetAddress(mailUserName + "@" + mailSmtpHost, mailUserDesc));
+			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(email, name));
 			msg.setSubject(subject);
 			msg.setText(msgBody);
 			Transport.send(msg);
@@ -307,8 +284,7 @@ public class LoginBean {
 
 	}
 
-	public void setOnline(String sessionid, boolean b) throws AuthException,
-			InternalException {
+	public void setOnline(String sessionid, boolean b) throws AuthException, InternalException {
 		logger.info("LoginBean.setOnline request");
 		User ui = LoginBean.getUser(entityManager, sessionid);
 		if (ui.getPriv() != User.Priv.SUPER) {
@@ -319,14 +295,12 @@ public class LoginBean {
 		logger.info("LoginBean.setOnline done");
 	}
 
-	public void update(String sessionid, Set<UserTO> modified)
-			throws InternalException, AuthException {
+	public void update(String sessionid, Set<UserTO> modified) throws InternalException, AuthException {
 		logger.debug("LoginBean.update " + modified.size() + " items");
 		User ui = LoginBean.getUser(entityManager, sessionid);
 		boolean supeR = ui.getPriv() == User.Priv.SUPER;
 		if (!supeR && !ui.isTreasurer()) {
-			throw new AuthException(
-					"You must be admin or treasurer to make this call");
+			throw new AuthException("You must be admin or treasurer to make this call");
 		}
 		for (UserTO to : modified) {
 			User usero = entityManager.find(User.class, to.getId());
@@ -337,6 +311,7 @@ public class LoginBean {
 			} else {
 				if (supeR) {
 					usero.setEmail(to.getEmail());
+					usero.setLogin(to.getLogin());
 					usero.setName(to.getName());
 					usero.setPhone1(to.getPhone1());
 					usero.setPhone2(to.getPhone2());
@@ -354,27 +329,23 @@ public class LoginBean {
 		}
 	}
 
-	public void update(String sessionid, UserTO to) throws InternalException,
-			AuthException {
+	public void update(String sessionid, UserTO to) throws InternalException, AuthException {
 		logger.debug("LoginBean.update " + to.getName());
 		User ui = LoginBean.getUser(entityManager, sessionid);
 		long uid = ui.getId().longValue();
 		if (uid != to.getId().longValue()) {
-			throw new AuthException(
-					"You may only modify information about your own account");
+			throw new AuthException("You may only modify information about your own account");
 		}
 		User usero = entityManager.find(User.class, to.getId());
 		if (to.isDelete()) {
 			entityManager.remove(usero);
 		} else {
 
-			List<User> users = entityManager
-					.createNamedQuery("UserByLogin", User.class)
+			List<User> users = entityManager.createNamedQuery("UserByLogin", User.class)
 					.setParameter("login", to.getLogin()).getResultList();
 			if (!users.isEmpty()) {
 				if (uid != users.get(0).getId().longValue()) {
-					throw new AuthException("The login name " + to.getLogin()
-							+ " is already in use");
+					throw new AuthException("The login name " + to.getLogin() + " is already in use");
 				}
 			}
 
@@ -394,8 +365,7 @@ public class LoginBean {
 		logger.debug("LoginBean.updated " + to.getName());
 	}
 
-	public void registerSkeletonUser(String sessionid) throws AuthException,
-			InternalException {
+	public void registerSkeletonUser(String sessionid) throws AuthException, InternalException {
 		logger.info("Request new skeleton user");
 		User ui = LoginBean.getUser(entityManager, sessionid);
 		if (ui.getPriv() != User.Priv.SUPER) {
@@ -409,26 +379,21 @@ public class LoginBean {
 	@Schedule(minute = "*/30", hour = "*")
 	private void cleanup() {
 		logger.info("Look to clean up old sessions");
-		for (Session session : entityManager
-				.createNamedQuery(Session.OLD, Session.class)
+		for (Session session : entityManager.createNamedQuery(Session.OLD, Session.class)
 				.setParameter("expiry", new Date()).getResultList()) {
-			logger.info("Cleaning out session for "
-					+ session.getUser().getName());
+			logger.info("Cleaning out session for " + session.getUser().getName());
 			entityManager.remove(session);
 		}
 
 	}
 
-	public void recover(HttpServletRequest req, String login)
-			throws BadInputException, InternalException {
+	public void recover(HttpServletRequest req, String login) throws BadInputException, InternalException {
 		logger.info("Try recovering login for " + login);
-		List<User> results = entityManager
-				.createNamedQuery("UserByLogin", User.class)
-				.setParameter("login", login).getResultList();
+		List<User> results = entityManager.createNamedQuery("UserByLogin", User.class).setParameter("login", login)
+				.getResultList();
 
 		if (results.isEmpty()) {
-			throw new BadInputException("The login name " + login
-					+ " is not registered");
+			throw new BadInputException("The login name " + login + " is not registered");
 		}
 
 		User u = results.get(0);
@@ -441,18 +406,14 @@ public class LoginBean {
 		String msgBody = "You, or somebody pretending to be you, has requested password reset for the "
 				+ "Harwell Croquet Web site. If it is you, then please click on the following "
 				+ "link to verify that it is you. You will be taken to the web page where you can change your password.\n\n"
-				+ url
-				+ "\n\n"
-				+ "If it is not you then you need do nothing."
-				+ "\n\nHarwell Croquet Club web Admin.";
+				+ url + "\n\n" + "If it is not you then you need do nothing." + "\n\nHarwell Croquet Club web Admin.";
 
 		String subject = "Harwell Croquet Club website password reset";
 
 		sendMail(u.getEmail(), u.getName(), subject, msgBody);
 	}
 
-	public UserTO resetPassword(long userId, String hashedPassword,
-			String newHashedPassword) throws AuthException {
+	public UserTO resetPassword(long userId, String hashedPassword, String newHashedPassword) throws AuthException {
 
 		logger.info("About to change password for user " + userId);
 		User u = entityManager.find(User.class, userId);
@@ -460,8 +421,7 @@ public class LoginBean {
 			throw new AuthException("User with id " + userId + " is not found");
 		}
 		if (!u.getPwd().equals(hashedPassword)) {
-			throw new AuthException("User with id " + userId
-					+ " does not have the specified password");
+			throw new AuthException("User with id " + userId + " does not have the specified password");
 		}
 
 		Status status = entityManager.find(Status.class, statusKey);
