@@ -46,13 +46,11 @@ public class LoginBean {
 
 	private Properties mailProps;
 
-	private String mailUserName;
+	private String fromEmail;
 
-	private String mailPassword;
+	private String fromPassword;
 
-	private String mailSmtpHost;
-
-	private String mailUserDesc;
+	private String fromDesc;
 
 	final static Logger logger = Logger.getLogger(LoginBean.class);
 
@@ -136,20 +134,17 @@ public class LoginBean {
 			InputStream inStream = new FileInputStream(new File("croquet.properties"));
 			props.load(inStream);
 
+			fromDesc = getStringProperty(props, "from.desc");
+			fromEmail = getStringProperty(props, "from.email");
+			fromPassword = getStringProperty(props, "from.password");
 			verifyUrl = getStringProperty(props, "verifyUrl");
-			mailSmtpHost = getStringProperty(props, "mail.smtp.host");
-			mailUserDesc = getStringProperty(props, "mail.userDesc");
 
 			mailProps = new Properties();
-			mailProps.put("mail.smtp.host", mailSmtpHost);
-			mailProps.put("mail.smtp.socketFactory.port", "587");
-			mailProps.put("mail.smtp.auth", "true");
-			mailProps.put("mail.smtp.port", "587");
-			mailProps.put("mail.smtp.starttls.enable", "true");
-			mailProps.put("mail.smtp.ssl.trust", "*");
-
-			mailUserName = getStringProperty(props, "mail.userName");
-			mailPassword = getStringProperty(props, "mail.password");
+			for (String name : props.stringPropertyNames()) {
+				if (name.startsWith("mail.")) {
+					mailProps.setProperty(name, props.getProperty(name));
+				}
+			}
 
 			logger.info("Completed init of LoginBean");
 		} catch (Exception e) {
@@ -264,13 +259,13 @@ public class LoginBean {
 
 		javax.mail.Session session = javax.mail.Session.getInstance(mailProps, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(mailUserName, mailPassword);
+				return new PasswordAuthentication(fromEmail, fromPassword);
 			}
 		});
 
 		try {
 			Message msg = new MimeMessage(session);
-			msg.setFrom(new InternetAddress(mailUserName + "@" + mailSmtpHost, mailUserDesc));
+			msg.setFrom(new InternetAddress(fromEmail, fromDesc));
 			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(email, name));
 			msg.setSubject(subject);
 			msg.setText(msgBody);
